@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "verify:dist": "npm run build && node scripts/verify-dist.mjs",
+    "preview:pages": "vite preview --base /market-dashboard-react/",
     "lint": "oxlint",
     "preview": "vite preview"
   },
