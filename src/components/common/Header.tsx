@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <div className="hdr">
       <div className="hdr-l">
-        <div className="logo">Market Command Centre</div>
+        <div className="logo">Market Dashboard</div>
         <div className="hdr-meta">
           <div style={{ letterSpacing: '1px' }}>{date}</div>
           <strong>{time}</strong>

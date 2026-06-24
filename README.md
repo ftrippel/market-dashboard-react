@@ -1,6 +1,6 @@
 # Market Dashboard - React Edition 🚀
 
-A modern React + TypeScript rewrite of the Market Command Centre dashboard with improved maintainability, type safety, and component reusability.
+A modern React + TypeScript rewrite of the market dashboard with improved maintainability, type safety, and component reusability.
 
 ## Overview
 
