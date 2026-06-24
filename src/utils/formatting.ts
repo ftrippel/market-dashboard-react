@@ -2,11 +2,29 @@
  * Number and value formatting utilities
  */
 
+const US_LOCALE = 'en-US';
+
 export function formatNumber(value: number, decimals = 2): string {
-  return value.toLocaleString('en-US', {
+  return value.toLocaleString(US_LOCALE, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
+}
+
+export function formatUsInteger(value: number): string {
+  return value.toLocaleString(US_LOCALE, { maximumFractionDigits: 0 });
+}
+
+/** Parse user input that may include US thousand separators. */
+export function parseUsNumber(raw: string): number {
+  const cleaned = raw.replace(/,/g, '').trim();
+  if (cleaned === '' || cleaned === '-' || cleaned === '.') return NaN;
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+export function formatUsCurrency(value: number, decimals = 0): string {
+  return `$${formatNumber(value, decimals)}`;
 }
 
 export function formatPercent(value: number, badge = false, maxPct = 15): string {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Section } from '../../components/common';
-import { colors, formatNumber } from '../../utils/formatting';
+import { FormattedNumberInput, Section } from '../../components/common';
+import { colors, formatUsCurrency, formatUsInteger } from '../../utils/formatting';
 
 type Direction = 'long' | 'short';
 
@@ -127,26 +127,20 @@ export function PositionCalculator() {
 
           <div className="fg">
             <label className="fl">Account Equity (USD)</label>
-            <input className="fi" type="number" value={equity} onChange={(e) => setEquity(Number(e.target.value))} />
+            <FormattedNumberInput value={equity} onChange={setEquity} />
           </div>
           <div className="fg">
             <label className="fl">Risk per Trade (%)</label>
-            <input
-              className="fi"
-              type="number"
-              step={0.05}
-              value={riskPct}
-              onChange={(e) => setRiskPct(Number(e.target.value))}
-            />
+            <FormattedNumberInput value={riskPct} onChange={setRiskPct} decimals={2} />
           </div>
           <div className="fr">
             <div className="fg">
               <label className="fl">Entry Price ($)</label>
-              <input className="fi" type="number" value={entry} onChange={(e) => setEntry(Number(e.target.value))} />
+              <FormattedNumberInput value={entry} onChange={setEntry} decimals={2} />
             </div>
             <div className="fg">
               <label className="fl">Stop Loss ($)</label>
-              <input className="fi" type="number" value={stop} onChange={(e) => setStop(Number(e.target.value))} />
+              <FormattedNumberInput value={stop} onChange={setStop} decimals={2} />
             </div>
           </div>
           <div className="fg">
@@ -156,22 +150,22 @@ export function PositionCalculator() {
 
           {calc && (
             <div className="res">
-              <div className="res-big">{calc.shares.toLocaleString()}</div>
+              <div className="res-big">{formatUsInteger(calc.shares)}</div>
               <div className="res-lbl">SHARES TO TRADE</div>
               <div className="res-sub">
                 <div className="ri">
                   <div className="rv" style={{ color: colors.red }}>
-                    ${Math.round(calc.rAmt).toLocaleString()}
+                    {formatUsCurrency(Math.round(calc.rAmt))}
                   </div>
                   <div className="rl">Max Risk $</div>
                 </div>
                 <div className="ri">
-                  <div className="rv">${Math.round(calc.posVal).toLocaleString()}</div>
+                  <div className="rv">{formatUsCurrency(Math.round(calc.posVal))}</div>
                   <div className="rl">Position Value</div>
                 </div>
                 <div className="ri">
                   <div className="rv" style={{ color: colors.amber }}>
-                    ${calc.rPts.toFixed(2)}
+                    {formatUsCurrency(calc.rPts, 2)}
                   </div>
                   <div className="rl">Risk/Share</div>
                 </div>
@@ -210,10 +204,10 @@ export function PositionCalculator() {
               <div key={lv.lbl} className="sr">
                 <span className="sr-lbl">{lv.lbl}</span>
                 <span className="sr-price" style={{ color: levelColor(lv.cls), fontWeight: 600, fontSize: '14px' }}>
-                  ${formatNumber(lv.price)}
+                  {formatUsCurrency(lv.price, 2)}
                 </span>
                 <span className="sr-shares" style={{ color: colors.text2, fontSize: '11px' }}>
-                  {lv.shares === 0 ? '—' : `${lv.shares.toLocaleString()} sh`}
+                  {lv.shares === 0 ? '—' : `${formatUsInteger(lv.shares)} sh`}
                 </span>
                 <span className="sr-pct" style={{ color: colors.text2, fontSize: '11px' }}>
                   {lv.pct}%
@@ -225,7 +219,7 @@ export function PositionCalculator() {
                     fontSize: '11px',
                   }}
                 >
-                  {lv.pnl === 0 ? '—' : `$${Math.round(lv.pnl).toLocaleString()}`}
+                  {lv.pnl === 0 ? '—' : formatUsCurrency(Math.round(lv.pnl))}
                 </span>
               </div>
             ))}
@@ -278,7 +272,7 @@ export function PositionCalculator() {
                                 whiteSpace: 'nowrap',
                               }}
                             >
-                              ${formatNumber(lv.price)}
+                              {formatUsCurrency(lv.price, 2)}
                             </div>
                           </div>
                         );
@@ -307,10 +301,10 @@ export function PositionCalculator() {
                           {r}:1 R
                         </div>
                         <div style={{ fontSize: '12px', fontWeight: 500, color: colors.green }}>
-                          ${formatNumber(tgt)}
+                          {formatUsCurrency(tgt, 2)}
                         </div>
                         <div style={{ fontSize: '9px', color: colors.green, marginTop: '2px' }}>
-                          +${Math.round(pnl).toLocaleString()}
+                          +{formatUsCurrency(Math.round(pnl))}
                         </div>
                       </div>
                     ))}
