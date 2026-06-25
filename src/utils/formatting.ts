@@ -87,7 +87,6 @@ export const colors = {
   greenDimBg: 'var(--green-dim-bg)',
   redDimBg: 'var(--red-dim-bg)',
   neutralDimBg: 'var(--neutral-dim-bg)',
-  rankTopBg: 'var(--rank-top-bg)',
   rowBorder: 'var(--row-border)',
   rowHoverBg: 'var(--row-hover-bg)',
   benchRowBg: 'var(--bench-row-bg)',

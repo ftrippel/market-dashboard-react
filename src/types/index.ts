@@ -120,7 +120,6 @@ export interface TableColumn {
 }
 
 export interface MarketTableOptions {
-  rank?: boolean;
   hasPrice?: boolean;
   isYield?: boolean;
   showSpark?: boolean;

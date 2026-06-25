@@ -98,29 +98,6 @@ function SortableHeader({
   );
 }
 
-function RankBadge({ rank }: { rank: number }) {
-  const top = rank <= 3;
-  return (
-    <span
-      className={top ? 'rank g' : 'rank'}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '18px',
-        height: '18px',
-        borderRadius: '2px',
-        fontSize: '9.5px',
-        fontWeight: 600,
-        background: top ? colors.rankTopBg : colors.bg4,
-        color: top ? colors.amber : colors.text3,
-      }}
-    >
-      {rank}
-    </span>
-  );
-}
-
 function TrendCell({ value }: { value?: boolean }) {
   if (value === true) {
     return (
@@ -157,7 +134,6 @@ function HoldingsButton({ onOpen }: { onOpen: () => void }) {
 export const MarketTable: React.FC<MarketTableProps> = ({
   data,
   holdings = {},
-  rank = false,
   hasPrice = true,
   isYield = false,
   showSpark = true,
@@ -202,7 +178,6 @@ export const MarketTable: React.FC<MarketTableProps> = ({
       <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'IBM Plex Mono, monospace' }}>
       <thead>
         <tr>
-          {rank && <th style={{ ...thStyle, textAlign: 'left' }}>#</th>}
           <SortableHeader
             label={nameLabel}
             sortKey="name"
@@ -263,7 +238,7 @@ export const MarketTable: React.FC<MarketTableProps> = ({
         </tr>
       </thead>
       <tbody>
-        {visible.map((item, idx) => {
+        {visible.map((item) => {
           const meta = getSymbolMeta(item.sym);
           const displayName = resolveDisplayName(item);
           const flag = item.flag || meta.flag;
@@ -279,11 +254,6 @@ export const MarketTable: React.FC<MarketTableProps> = ({
                 background: isBenchmark ? colors.benchRowBg : undefined,
               }}
             >
-                {rank && (
-                  <td style={{ ...tdStyle, textAlign: 'left' }}>
-                    <RankBadge rank={idx + 1} />
-                  </td>
-                )}
                 <td style={{ ...tdStyle, textAlign: 'left' }}>
                   <SymbolLink sym={item.sym} name={displayName} flag={flag} />
                   <span style={{ color: colors.text3, fontSize: '10px', display: 'block', letterSpacing: '0.5px' }}>

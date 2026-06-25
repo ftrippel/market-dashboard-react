@@ -27,7 +27,6 @@ export function EquitiesSection() {
         <MarketTable
           data={store.submkt}
           nameLabel="Sub-Market / ETF"
-          rank
           showTrend
           {...rankByW1}
         />
@@ -38,7 +37,6 @@ export function EquitiesSection() {
           <MarketTable
             data={store.sectors}
             nameLabel="Sector"
-            rank
             hasPrice={false}
             showTrend
             showHoldings
@@ -51,7 +49,6 @@ export function EquitiesSection() {
           <MarketTable
             data={store.sectorsEW}
             nameLabel="EW Sector"
-            rank
             hasPrice={false}
             showTrend
             showHoldings
@@ -70,7 +67,6 @@ export function EquitiesSection() {
         style={{ marginBottom: '9px' }}
         tableProps={{
           nameLabel: 'Theme / ETF',
-          rank: true,
           showTrend: true,
           showHoldings: true,
           ...rankByW1,
@@ -84,7 +80,6 @@ export function EquitiesSection() {
         holdings={store.holdings}
         tableProps={{
           nameLabel: 'Country / ETF',
-          rank: true,
           showTrend: true,
           showHoldings: true,
           ...rankByW1,

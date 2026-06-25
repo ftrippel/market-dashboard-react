@@ -85,21 +85,19 @@ export const HoldingsFlyover: React.FC<HoldingsFlyoverProps> = ({
             >
               <thead>
                 <tr>
-                  <th style={{ ...thStyle, textAlign: 'left' }}>#</th>
                   <th style={{ ...thStyle, textAlign: 'left' }}>Symbol</th>
                   <th style={{ ...thStyle, textAlign: 'left' }}>Name</th>
                   <th style={{ ...thStyle, textAlign: 'right' }}>Weight</th>
                 </tr>
               </thead>
               <tbody>
-                {holdings.map((holding, idx) => (
+                {holdings.map((holding) => (
                   <tr
                     key={holding.s}
                     style={{
                       borderBottom: `1px solid ${colors.rowBorder}`,
                     }}
                   >
-                    <td style={{ ...tdStyle, textAlign: 'left', color: colors.text3 }}>{idx + 1}</td>
                     <td style={{ ...tdStyle, textAlign: 'left', color: colors.text, fontWeight: 500 }}>
                       {holding.s}
                     </td>
