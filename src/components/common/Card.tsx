@@ -5,9 +5,10 @@ interface CardProps {
   label: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  headerAction?: React.ReactNode;
 }
 
-export const Card: React.FC<CardProps> = ({ label, children, style }) => {
+export const Card: React.FC<CardProps> = ({ label, children, style, headerAction }) => {
   return (
     <div
       style={{
@@ -21,6 +22,10 @@ export const Card: React.FC<CardProps> = ({ label, children, style }) => {
     >
       <div
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '8px',
           padding: '7px 11px',
           fontSize: '10px',
           letterSpacing: '2px',
@@ -32,7 +37,8 @@ export const Card: React.FC<CardProps> = ({ label, children, style }) => {
           fontFamily: 'IBM Plex Mono, monospace',
         }}
       >
-        {label}
+        <span>{label}</span>
+        {headerAction}
       </div>
       {children}
     </div>

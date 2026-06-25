@@ -1,0 +1,104 @@
+import React, { useEffect, useId, useState } from 'react';
+import type { Holding, MarketData, MarketTableOptions } from '../../types';
+import { Card } from './Card';
+import { MarketTable } from './MarketTable';
+
+interface ExpandableTableCardProps {
+  label: string;
+  expandTitle: string;
+  data: MarketData[];
+  holdings?: Record<string, Holding[]>;
+  previewCount?: number;
+  style?: React.CSSProperties;
+  tableProps: Omit<MarketTableOptions, 'sortBy' | 'sortOrder'> & {
+    sortBy?: MarketTableOptions['sortBy'];
+    sortOrder?: MarketTableOptions['sortOrder'];
+  };
+}
+
+export const ExpandableTableCard: React.FC<ExpandableTableCardProps> = ({
+  label,
+  expandTitle,
+  data,
+  holdings = {},
+  previewCount = 10,
+  style,
+  tableProps,
+}) => {
+  const [open, setOpen] = useState(false);
+  const titleId = useId();
+  const previewData = data.slice(0, previewCount);
+  const canExpand = data.length > previewCount;
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  return (
+    <>
+      <Card
+        label={label}
+        style={style}
+        headerAction={
+          canExpand ? (
+            <button
+              type="button"
+              className="table-expand-btn"
+              aria-label={`Expand ${label}`}
+              title={`View all ${data.length} rows`}
+              onClick={() => setOpen(true)}
+            >
+              ⤢
+            </button>
+          ) : undefined
+        }
+      >
+        <MarketTable data={previewData} holdings={holdings} {...tableProps} />
+      </Card>
+
+      {open && (
+        <div
+          className="table-flyover open"
+          role="presentation"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setOpen(false);
+          }}
+        >
+          <div
+            className="table-flyover-box"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="table-flyover-hdr">
+              <div id={titleId} className="table-flyover-title">
+                {expandTitle}
+              </div>
+              <button type="button" onClick={() => setOpen(false)}>
+                ✕ &nbsp;CLOSE
+              </button>
+            </div>
+            <div className="table-flyover-body">
+              <MarketTable data={data} holdings={holdings} {...tableProps} />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

@@ -60,7 +60,7 @@ function transformData(raw: RawData): MarketState {
     submkt: sortByW1(raw.submarket ?? []),
     sectors: prepareSectors(raw.sector, etfmain, 'SPY'),
     sectorsEW: prepareSectors(raw.sectorew, etfmain, 'RSP'),
-    thematic: sortByW1(raw.thematic ?? []).slice(0, 10),
+    thematic: sortByW1(raw.thematic ?? []),
     country: sortByW1(raw.country ?? []),
     breadth: raw.breadth ?? null,
     holdings: raw.holdings ?? {},

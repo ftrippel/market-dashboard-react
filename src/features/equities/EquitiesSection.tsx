@@ -1,4 +1,4 @@
-import { Card, MarketTable, Section } from '../../components/common';
+import { Card, ExpandableTableCard, MarketTable, Section } from '../../components/common';
 import { useMarketStore } from '../../store/marketStore';
 
 export function EquitiesSection() {
@@ -52,27 +52,32 @@ export function EquitiesSection() {
         </Card>
       </div>
 
-      <Card label="▸ Top 10 Thematic Sectors — Ranked by 1W (Holdings expandable ▸)" style={{ marginBottom: '9px' }}>
-        <MarketTable
-          data={store.thematic}
-          nameLabel="Theme / ETF"
-          rank
-          showTrend
-          showHoldings
-          holdings={store.holdings}
-        />
-      </Card>
+      <ExpandableTableCard
+        label="▸ Top 10 Thematic Sectors — Ranked by 1W (Holdings expandable ▸)"
+        expandTitle={`All Thematic Sectors (${store.thematic.length}) — Ranked by 1W`}
+        data={store.thematic}
+        holdings={store.holdings}
+        style={{ marginBottom: '9px' }}
+        tableProps={{
+          nameLabel: 'Theme / ETF',
+          rank: true,
+          showTrend: true,
+          showHoldings: true,
+        }}
+      />
 
-      <Card label="▸ Country ETFs — Top 10 by 1W Performance (Holdings expandable ▸)">
-        <MarketTable
-          data={store.country}
-          nameLabel="Country / ETF"
-          rank
-          showTrend
-          showHoldings
-          holdings={store.holdings}
-        />
-      </Card>
+      <ExpandableTableCard
+        label="▸ Country ETFs — Top 10 by 1W Performance (Holdings expandable ▸)"
+        expandTitle={`All Country ETFs (${store.country.length}) — Ranked by 1W`}
+        data={store.country}
+        holdings={store.holdings}
+        tableProps={{
+          nameLabel: 'Country / ETF',
+          rank: true,
+          showTrend: true,
+          showHoldings: true,
+        }}
+      />
     </Section>
   );
-}
+};

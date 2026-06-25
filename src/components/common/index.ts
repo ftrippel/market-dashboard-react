@@ -1,3 +1,4 @@
+export { ExpandableTableCard } from './ExpandableTableCard';
 export { Header } from './Header';
 export { Card } from './Card';
 export { Table } from './Table';
