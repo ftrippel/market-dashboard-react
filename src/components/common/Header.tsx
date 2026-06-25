@@ -50,10 +50,10 @@ export const Header: React.FC<HeaderProps> = ({
           <div style={{ letterSpacing: '1px' }}>{date}</div>
           <strong>{time}</strong>
         </div>
-        <div className="live">
+        {/*<div className="live">
           <span className="dot" />
           HKT LIVE
-        </div>
+        </div>*/}
       </div>
 
       <div className="hdr-r">
