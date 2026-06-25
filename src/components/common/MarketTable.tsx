@@ -267,7 +267,8 @@ export const MarketTable: React.FC<MarketTableProps> = ({
     (showHoldings ? 1 : 0);
 
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'IBM Plex Mono, monospace' }}>
+    <div className="table-scroll">
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'IBM Plex Mono, monospace' }}>
       <thead>
         <tr>
           {rank && <th style={{ ...thStyle, textAlign: 'left' }}>#</th>}
@@ -416,5 +417,6 @@ export const MarketTable: React.FC<MarketTableProps> = ({
         })}
       </tbody>
     </table>
+    </div>
   );
 };

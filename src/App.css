@@ -419,6 +419,24 @@ body::before {
   opacity: 1;
 }
 
+.table-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  max-width: 100%;
+}
+
+.table-scroll > table {
+  width: 100%;
+  min-width: max-content;
+}
+
+.table-scroll th,
+.table-scroll td {
+  white-space: nowrap;
+}
+
 /* Layout grids (match original HTML) */
 .mg,
 .g2 {

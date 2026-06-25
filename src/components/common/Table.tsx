@@ -58,7 +58,8 @@ export const Table: React.FC<TableProps> = ({
   }, [data, sortBy, sortOrder]);
 
   return (
-    <table
+    <div className="table-scroll">
+      <table
       style={{
         width: '100%',
         borderCollapse: 'collapse',
@@ -129,5 +130,6 @@ export const Table: React.FC<TableProps> = ({
         ))}
       </tbody>
     </table>
+    </div>
   );
 };
