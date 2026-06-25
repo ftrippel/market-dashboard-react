@@ -10,10 +10,7 @@ interface ExpandableTableCardProps {
   holdings?: Record<string, Holding[]>;
   previewCount?: number;
   style?: React.CSSProperties;
-  tableProps: Omit<MarketTableOptions, 'sortBy' | 'sortOrder'> & {
-    sortBy?: MarketTableOptions['sortBy'];
-    sortOrder?: MarketTableOptions['sortOrder'];
-  };
+  tableProps: MarketTableOptions;
 }
 
 export const ExpandableTableCard: React.FC<ExpandableTableCardProps> = ({

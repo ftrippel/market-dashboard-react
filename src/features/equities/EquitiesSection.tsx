@@ -1,11 +1,17 @@
 import { Card, ExpandableTableCard, MarketTable, Section } from '../../components/common';
 import { useMarketStore } from '../../store/marketStore';
+import type { MarketTableOptions } from '../../types';
+
+const rankByW1: Pick<MarketTableOptions, 'sortBy' | 'sortOrder'> = {
+  sortBy: 'w1',
+  sortOrder: 'desc',
+};
 
 export function EquitiesSection() {
   const store = useMarketStore();
 
   return (
-    <Section number="02" title="Equities Overview" subtitle="RANKED BY 1W PERFORMANCE">
+    <Section number="02" title="Equities Overview">
       <Card label="▸ Major ETF Stats" style={{ marginBottom: '9px' }}>
         <MarketTable
           data={store.etfs}
@@ -13,20 +19,22 @@ export function EquitiesSection() {
           showTrend
           showHoldings
           holdings={store.holdings}
+          {...rankByW1}
         />
       </Card>
 
-      <Card label="▸ S&P 500 Sub-Market Performance — Ranked by 1W" style={{ marginBottom: '9px' }}>
+      <Card label="▸ S&P 500 Sub-Market Performance" style={{ marginBottom: '9px' }}>
         <MarketTable
           data={store.submkt}
           nameLabel="Sub-Market / ETF"
           rank
           showTrend
+          {...rankByW1}
         />
       </Card>
 
       <div className="g2" style={{ marginBottom: '9px' }}>
-        <Card label="▸ S&P 500 Sub-Sector — Ranked by 1W">
+        <Card label="▸ S&P 500 Sub-Sector">
           <MarketTable
             data={store.sectors}
             nameLabel="Sector"
@@ -36,9 +44,10 @@ export function EquitiesSection() {
             showHoldings
             benchmarkSym="SPY"
             holdings={store.holdings}
+            {...rankByW1}
           />
         </Card>
-        <Card label="▸ S&P 500 EW Sub-Sector — Ranked by 1W">
+        <Card label="▸ S&P 500 EW Sub-Sector">
           <MarketTable
             data={store.sectorsEW}
             nameLabel="EW Sector"
@@ -48,13 +57,14 @@ export function EquitiesSection() {
             showHoldings
             benchmarkSym="RSP"
             holdings={store.holdings}
+            {...rankByW1}
           />
         </Card>
       </div>
 
       <ExpandableTableCard
-        label="▸ Top 10 Thematic Sectors — Ranked by 1W (Holdings expandable ▸)"
-        expandTitle={`All Thematic Sectors (${store.thematic.length}) — Ranked by 1W`}
+        label="▸ Thematic Sectors — Top 10 Ranked by 1W"
+        expandTitle={`All Thematic Sectors (${store.thematic.length})`}
         data={store.thematic}
         holdings={store.holdings}
         style={{ marginBottom: '9px' }}
@@ -63,12 +73,13 @@ export function EquitiesSection() {
           rank: true,
           showTrend: true,
           showHoldings: true,
+          ...rankByW1,
         }}
       />
 
       <ExpandableTableCard
-        label="▸ Country ETFs — Top 10 by 1W Performance (Holdings expandable ▸)"
-        expandTitle={`All Country ETFs (${store.country.length}) — Ranked by 1W`}
+        label="▸ Country ETFs — Top 10 Ranked by 1W"
+        expandTitle={`All Country ETFs (${store.country.length})`}
         data={store.country}
         holdings={store.holdings}
         tableProps={{
@@ -76,6 +87,7 @@ export function EquitiesSection() {
           rank: true,
           showTrend: true,
           showHoldings: true,
+          ...rankByW1,
         }}
       />
     </Section>
