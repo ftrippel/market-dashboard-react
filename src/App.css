@@ -405,20 +405,6 @@ body::before {
   align-items: center;
 }
 
-.api-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 12px;
-  background: var(--amber-subtle-bg);
-  border: 1px solid var(--amber-border);
-  border-radius: 3px;
-  margin-bottom: 10px;
-  font-size: 11px;
-  color: var(--amber);
-  letter-spacing: .5px;
-}
-
 .snap-flash {
   position: fixed;
   inset: 0;
@@ -860,16 +846,6 @@ body::before {
   flex-shrink: 0;
 }
 
-.status-dot {
-  display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
-}
-
-.status-dot .icon {
-  font-size: 10px;
-}
-
 .expand-chevron {
   transition: transform .2s;
   display: inline-flex;
@@ -904,11 +880,6 @@ body::before {
   .quote-bar {
     flex-direction: column;
     gap: 8px;
-  }
-
-  .api-bar {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .hdr-r {

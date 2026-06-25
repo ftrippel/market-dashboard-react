@@ -78,11 +78,6 @@ function DashboardContent() {
   }, [showToast, store]);
 
   const dataReady = !store.loading && store.futures.length > 0;
-  const dataLabel = store.loading
-    ? 'Loading market data...'
-    : dataReady
-      ? '✓ Market data loaded — EOD prices'
-      : '⚠ No market data available';
 
   return (
     <div className="app">
@@ -113,19 +108,6 @@ function DashboardContent() {
           <div className="quote-icon">
             <Icon name="auto_awesome" size="sm" />
           </div>
-        </div>
-
-        <div className="api-bar">
-          <span className="status-dot">
-            <Icon name="fiber_manual_record" size="xs" filled />
-          </span>
-          &nbsp;
-          <span style={{ color: dataReady ? colors.green : colors.text2 }}>{dataLabel}</span>
-          <span style={{ color: colors.text3, fontSize: '9px', marginLeft: 'auto' }}>
-            {dataTimestamp
-              ? `${dataTimestamp.statusLine} · Yahoo Finance`
-              : 'Awaiting data.json · Yahoo Finance'}
-          </span>
         </div>
 
         <MacroSection />
