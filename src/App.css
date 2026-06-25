@@ -446,19 +446,12 @@ body::before {
   margin-bottom: 9px;
 }
 
-.holdings-row {
-  display: none;
-}
-
-.holdings-row.show {
-  display: table-row;
-}
-
 .table-expand-btn {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   background: none;
   border: 1px solid var(--border2);
   color: var(--text3);
@@ -501,6 +494,11 @@ body::before {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.table-flyover-box--holdings {
+  width: min(720px, 96vw);
+  max-height: min(560px, 92vh);
 }
 
 .table-flyover-hdr {
@@ -576,10 +574,6 @@ body::before {
 
 .th-sort.active .th-sort-icon {
   opacity: 1;
-}
-
-.expand-btn:hover {
-  color: var(--accent);
 }
 
 /* Position calculator */
@@ -862,16 +856,6 @@ body::before {
 
 .btn .icon {
   flex-shrink: 0;
-}
-
-.expand-chevron {
-  transition: transform .2s;
-  display: inline-flex;
-  align-items: center;
-}
-
-.expand-chevron.open {
-  transform: rotate(90deg);
 }
 
 /* Responsive */

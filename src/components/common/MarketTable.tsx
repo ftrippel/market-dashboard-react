@@ -6,6 +6,7 @@ import { Sparkline } from './Sparkline';
 import { BpsCell, PctCell } from './PctCell';
 import { Icon } from './Icon';
 import { SymbolLink } from './TradingViewModal';
+import { HoldingsFlyover } from './HoldingsFlyover';
 
 type SortKey = 'name' | 'price' | 'd1' | 'w1' | 'hi52' | 'ytd' | 'ema_uptrend';
 type SortOrder = 'asc' | 'desc';
@@ -138,90 +139,18 @@ function TrendCell({ value }: { value?: boolean }) {
   return <span style={{ color: colors.text3, fontSize: '11px' }}>—</span>;
 }
 
-function HoldingsButton({
-  expanded,
-  onToggle,
-}: {
-  expanded: boolean;
-  onToggle: () => void;
-}) {
+function HoldingsButton({ onOpen }: { onOpen: () => void }) {
   return (
     <button
       type="button"
-      className={`expand-btn${expanded ? ' open' : ''}`}
-      onClick={onToggle}
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '4px',
-        background: 'none',
-        border: 'none',
-        color: colors.text3,
-        fontFamily: 'IBM Plex Mono, monospace',
-        fontSize: '10px',
-        cursor: 'pointer',
-        padding: 0,
-        letterSpacing: '0.5px',
-      }}
+      className="table-expand-btn"
+      onClick={onOpen}
+      aria-label="View top 10 holdings"
+      title="View top 10 holdings"
     >
-      <span className={`expand-chevron${expanded ? ' open' : ''}`}>
-        <Icon name="chevron_right" size="xs" />
-      </span>{' '}
+      <Icon name="open_in_full" size="xs" />
       TOP 10
     </button>
-  );
-}
-
-function HoldingsPanel({
-  displayName,
-  holdings,
-}: {
-  displayName: string;
-  holdings: Holding[];
-}) {
-  return (
-    <div className="holdings-inner" style={{ padding: '8px 11px 10px 28px', background: colors.bg4 }}>
-      <div
-        className="h-title"
-        style={{
-          fontSize: '10px',
-          color: colors.text3,
-          letterSpacing: '1.5px',
-          textTransform: 'uppercase',
-          marginBottom: '6px',
-        }}
-      >
-        TOP 10 HOLDINGS BY WEIGHT — {displayName}
-      </div>
-      <div className="h-list" style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-        {holdings.map((h) => (
-          <div
-            key={h.s}
-            className="h-item"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              background: colors.bg3,
-              border: `1px solid ${colors.border}`,
-              borderRadius: '2px',
-              padding: '3px 7px',
-              fontSize: '11px',
-            }}
-          >
-            <span className="h-w" style={{ color: colors.accent, fontSize: '10px', minWidth: '30px', textAlign: 'right' }}>
-              {h.w.toFixed(1)}%
-            </span>
-            <span className="h-sym" style={{ color: colors.text, fontWeight: 500 }}>
-              {h.s}
-            </span>
-            <span className="h-nm" style={{ color: colors.text3, fontSize: '10px' }}>
-              {h.n}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -241,7 +170,11 @@ export const MarketTable: React.FC<MarketTableProps> = ({
   priceLabel = 'Price',
   maxRows,
 }) => {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [holdingsFlyout, setHoldingsFlyout] = useState<{
+    sym: string;
+    displayName: string;
+    holdings: Holding[];
+  } | null>(null);
   const [sort, setSort] = useState<{ key: SortKey; order: SortOrder }>({
     key: (sortBy as SortKey) || 'w1',
     order: sortOrder,
@@ -263,16 +196,8 @@ export const MarketTable: React.FC<MarketTableProps> = ({
     return sorted.slice(0, maxRows);
   }, [sorted, maxRows]);
 
-  const colCount =
-    (rank ? 1 : 0) +
-    1 +
-    (hasPrice ? 1 : 0) +
-    4 +
-    (showSpark ? 1 : 0) +
-    (showTrend ? 1 : 0) +
-    (showHoldings ? 1 : 0);
-
   return (
+    <>
     <div className="table-scroll">
       <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'IBM Plex Mono, monospace' }}>
       <thead>
@@ -344,17 +269,16 @@ export const MarketTable: React.FC<MarketTableProps> = ({
           const flag = item.flag || meta.flag;
           const isBenchmark = benchmarkSym && item.sym === benchmarkSym;
           const symHoldings = holdings[item.sym];
-          const isExpanded = expanded[item.sym] ?? false;
 
           return (
-            <React.Fragment key={item.sym}>
-              <tr
-                className={isBenchmark ? 'bench-row' : undefined}
-                style={{
-                  borderBottom: `1px solid ${colors.rowBorder}`,
-                  background: isBenchmark ? colors.benchRowBg : undefined,
-                }}
-              >
+            <tr
+              key={item.sym}
+              className={isBenchmark ? 'bench-row' : undefined}
+              style={{
+                borderBottom: `1px solid ${colors.rowBorder}`,
+                background: isBenchmark ? colors.benchRowBg : undefined,
+              }}
+            >
                 {rank && (
                   <td style={{ ...tdStyle, textAlign: 'left' }}>
                     <RankBadge rank={idx + 1} />
@@ -400,9 +324,12 @@ export const MarketTable: React.FC<MarketTableProps> = ({
                   <td style={{ ...tdStyle, textAlign: 'left' }}>
                     {symHoldings?.length ? (
                       <HoldingsButton
-                        expanded={isExpanded}
-                        onToggle={() =>
-                          setExpanded((prev) => ({ ...prev, [item.sym]: !prev[item.sym] }))
+                        onOpen={() =>
+                          setHoldingsFlyout({
+                            sym: item.sym,
+                            displayName,
+                            holdings: symHoldings,
+                          })
                         }
                       />
                     ) : (
@@ -411,18 +338,20 @@ export const MarketTable: React.FC<MarketTableProps> = ({
                   </td>
                 )}
               </tr>
-              {showHoldings && isExpanded && symHoldings?.length ? (
-                <tr className="holdings-row show">
-                  <td colSpan={colCount} style={{ padding: 0 }}>
-                    <HoldingsPanel displayName={displayName} holdings={symHoldings} />
-                  </td>
-                </tr>
-              ) : null}
-            </React.Fragment>
           );
         })}
       </tbody>
     </table>
     </div>
+
+    {holdingsFlyout && (
+      <HoldingsFlyover
+        etfSym={holdingsFlyout.sym}
+        displayName={holdingsFlyout.displayName}
+        holdings={holdingsFlyout.holdings}
+        onClose={() => setHoldingsFlyout(null)}
+      />
+    )}
+    </>
   );
 };
