@@ -1,6 +1,7 @@
 export { ExpandableTableCard } from './ExpandableTableCard';
 export { Header } from './Header';
 export { Card } from './Card';
+export { Icon, CardLabel, XIcon } from './Icon';
 export { Table } from './Table';
 export { MarketTable } from './MarketTable';
 export { Section } from './Section';

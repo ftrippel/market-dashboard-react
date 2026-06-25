@@ -2,7 +2,7 @@ import React from 'react';
 import { colors } from '../../utils/formatting';
 
 interface CardProps {
-  label: string;
+  label: React.ReactNode;
   children: React.ReactNode;
   style?: React.CSSProperties;
   headerAction?: React.ReactNode;

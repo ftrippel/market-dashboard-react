@@ -19,11 +19,7 @@ export const PctCell: React.FC<PctCellProps> = ({ value, badge = false, maxPct =
 
   if (badge) {
     const bg =
-      value > 0
-        ? 'rgba(12,175,66,.12)'
-        : value < 0
-          ? 'rgba(242,54,69,.12)'
-          : 'rgba(61,90,120,.15)';
+      value > 0 ? colors.greenDimBg : value < 0 ? colors.redDimBg : colors.neutralDimBg;
     return (
       <span
         style={{

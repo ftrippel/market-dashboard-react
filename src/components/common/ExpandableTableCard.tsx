@@ -1,10 +1,11 @@
 import React, { useEffect, useId, useState } from 'react';
 import type { Holding, MarketData, MarketTableOptions } from '../../types';
 import { Card } from './Card';
+import { Icon } from './Icon';
 import { MarketTable } from './MarketTable';
 
 interface ExpandableTableCardProps {
-  label: string;
+  label: React.ReactNode;
   expandTitle: string;
   data: MarketData[];
   holdings?: Record<string, Holding[]>;
@@ -55,11 +56,11 @@ export const ExpandableTableCard: React.FC<ExpandableTableCardProps> = ({
             <button
               type="button"
               className="table-expand-btn"
-              aria-label={`Expand ${label}`}
+              aria-label={`Expand table — ${expandTitle}`}
               title={`View all ${data.length} rows`}
               onClick={() => setOpen(true)}
             >
-              ⤢
+              <Icon name="open_in_full" size="sm" />
             </button>
           ) : undefined
         }
@@ -87,7 +88,8 @@ export const ExpandableTableCard: React.FC<ExpandableTableCardProps> = ({
                 {expandTitle}
               </div>
               <button type="button" onClick={() => setOpen(false)}>
-                ✕ &nbsp;CLOSE
+                <Icon name="close" size="xs" />
+                CLOSE
               </button>
             </div>
             <div className="table-flyover-body">

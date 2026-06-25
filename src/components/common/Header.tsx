@@ -1,5 +1,7 @@
 import React from 'react';
 import { colors } from '../../utils/formatting';
+import { useTheme } from '../../context/ThemeContext';
+import { Icon, XIcon } from './Icon';
 
 interface HeaderProps {
   loading: boolean;
@@ -18,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   onShareX,
   onCopy,
 }) => {
+  const { theme, toggleTheme } = useTheme();
   const [time, setTime] = React.useState<string>('—');
   const [date, setDate] = React.useState<string>('—');
 
@@ -73,14 +76,26 @@ export const Header: React.FC<HeaderProps> = ({
         >
           {badgeText}
         </span>
+        <button
+          type="button"
+          className="btn btn-theme"
+          onClick={toggleTheme}
+          title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+        >
+          <Icon name={theme === 'light' ? 'dark_mode' : 'light_mode'} size="sm" />
+        </button>
         <button type="button" className="btn btn-snap" onClick={onSnap}>
-          📸 SNAP
+          <Icon name="photo_camera" size="sm" />
+          SNAP
         </button>
         <button type="button" className="btn btn-x" onClick={onShareX}>
-          𝕏 SHARE
+          <XIcon size={13} />
+          SHARE
         </button>
         <button type="button" className="btn btn-copy" onClick={onCopy}>
-          ⧉ COPY
+          <Icon name="content_copy" size="sm" />
+          COPY
         </button>
       </div>
 

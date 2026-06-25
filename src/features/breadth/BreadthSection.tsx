@@ -1,4 +1,4 @@
-import { Card, Section } from '../../components/common';
+import { Card, CardLabel, Section } from '../../components/common';
 import { colors } from '../../utils/formatting';
 import type { Breadth } from '../../types';
 
@@ -118,7 +118,7 @@ export function BreadthSection({ breadth }: BreadthSectionProps) {
       title="Market Breadth & Sentiment"
       subtitle="S&P 500 INTERNALS · SENTIMENT INDICATORS · UPDATED DAILY"
     >
-      <Card label="▸ Market Internals Dashboard" style={{ padding: '16px 18px' }}>
+      <Card label={<CardLabel>Market Internals Dashboard</CardLabel>} style={{ padding: '16px 18px' }}>
         <div
           id="breadthGrid"
           style={{

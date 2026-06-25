@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Header, Toast, TradingViewModal } from './components/common';
 import { ChartModalProvider } from './context/ChartModalContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { MacroDivider, MacroSection } from './features/macro/MacroSection';
 import { EquitiesSection } from './features/equities/EquitiesSection';
 import { BreadthSection } from './features/breadth/BreadthSection';
@@ -15,6 +16,7 @@ import {
   shareDashboardToX,
 } from './services/share';
 import { colors, formatDataTimestamp } from './utils/formatting';
+import { Icon } from './components/common/Icon';
 import './App.css';
 
 function DashboardContent() {
@@ -103,14 +105,21 @@ function DashboardContent() {
         />
 
         <div className="quote-bar">
-          <div className="quote-icon">✦</div>
+          <div className="quote-icon">
+            <Icon name="auto_awesome" size="sm" />
+          </div>
           <div className="quote-text">"If you Fail to Plan, You are Planning to Fail"</div>
           <div className="quote-author">— Benjamin Franklin</div>
-          <div className="quote-icon">✦</div>
+          <div className="quote-icon">
+            <Icon name="auto_awesome" size="sm" />
+          </div>
         </div>
 
         <div className="api-bar">
-          ⬤ &nbsp;
+          <span className="status-dot">
+            <Icon name="fiber_manual_record" size="xs" filled />
+          </span>
+          &nbsp;
           <span style={{ color: dataReady ? colors.green : colors.text2 }}>{dataLabel}</span>
           <span style={{ color: colors.text3, fontSize: '9px', marginLeft: 'auto' }}>
             {dataTimestamp
@@ -145,9 +154,11 @@ function DashboardContent() {
 
 function App() {
   return (
-    <ChartModalProvider>
-      <DashboardContent />
-    </ChartModalProvider>
+    <ThemeProvider>
+      <ChartModalProvider>
+        <DashboardContent />
+      </ChartModalProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Card, ExpandableTableCard, MarketTable, Section } from '../../components/common';
+import { Card, CardLabel, ExpandableTableCard, MarketTable, Section } from '../../components/common';
 import { useMarketStore } from '../../store/marketStore';
 import type { MarketTableOptions } from '../../types';
 
@@ -12,7 +12,7 @@ export function EquitiesSection() {
 
   return (
     <Section number="02" title="Equities Overview">
-      <Card label="▸ Major ETF Stats" style={{ marginBottom: '9px' }}>
+      <Card label={<CardLabel>Major ETF Stats</CardLabel>} style={{ marginBottom: '9px' }}>
         <MarketTable
           data={store.etfs}
           nameLabel="ETF"
@@ -23,7 +23,7 @@ export function EquitiesSection() {
         />
       </Card>
 
-      <Card label="▸ S&P 500 Sub-Market Performance" style={{ marginBottom: '9px' }}>
+      <Card label={<CardLabel>S&P 500 Sub-Market Performance</CardLabel>} style={{ marginBottom: '9px' }}>
         <MarketTable
           data={store.submkt}
           nameLabel="Sub-Market / ETF"
@@ -34,7 +34,7 @@ export function EquitiesSection() {
       </Card>
 
       <div className="g2" style={{ marginBottom: '9px' }}>
-        <Card label="▸ S&P 500 Sub-Sector">
+        <Card label={<CardLabel>S&P 500 Sub-Sector</CardLabel>}>
           <MarketTable
             data={store.sectors}
             nameLabel="Sector"
@@ -47,7 +47,7 @@ export function EquitiesSection() {
             {...rankByW1}
           />
         </Card>
-        <Card label="▸ S&P 500 EW Sub-Sector">
+        <Card label={<CardLabel>S&P 500 EW Sub-Sector</CardLabel>}>
           <MarketTable
             data={store.sectorsEW}
             nameLabel="EW Sector"
@@ -63,7 +63,7 @@ export function EquitiesSection() {
       </div>
 
       <ExpandableTableCard
-        label="▸ Thematic Sectors — Top 10 Ranked by 1W"
+        label={<CardLabel>Thematic Sectors — Top 10 Ranked by 1W</CardLabel>}
         expandTitle={`All Thematic Sectors (${store.thematic.length})`}
         data={store.thematic}
         holdings={store.holdings}
@@ -78,7 +78,7 @@ export function EquitiesSection() {
       />
 
       <ExpandableTableCard
-        label="▸ Country ETFs — Top 10 Ranked by 1W"
+        label={<CardLabel>Country ETFs — Top 10 Ranked by 1W</CardLabel>}
         expandTitle={`All Country ETFs (${store.country.length})`}
         data={store.country}
         holdings={store.holdings}

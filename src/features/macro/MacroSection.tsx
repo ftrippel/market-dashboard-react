@@ -1,4 +1,4 @@
-import { Card, MarketTable, Section } from '../../components/common';
+import { Card, CardLabel, MarketTable, Section } from '../../components/common';
 import { useMarketStore } from '../../store/marketStore';
 import { colors } from '../../utils/formatting';
 
@@ -8,32 +8,32 @@ export function MacroSection() {
   return (
     <Section number="01" title="Macro Overview" subtitle="EOD SNAPSHOT · PREV CLOSE · RANKED BY CATEGORY">
       <div className="mg">
-        <Card label="▸ US Index Futures">
+        <Card label={<CardLabel>US Index Futures</CardLabel>}>
           <MarketTable data={store.futures} nameLabel="Contract" />
         </Card>
-        <Card label="▸ Volatility & Dollar">
+        <Card label={<CardLabel>Volatility & Dollar</CardLabel>}>
           <MarketTable data={store.dxvix} nameLabel="Instrument" />
         </Card>
       </div>
 
-      <Card label="▸ Crypto" style={{ marginBottom: '9px' }}>
-        <MarketTable data={store.crypto} nameLabel="Asset" priceLabel="Price (USD)" />
+      <Card label={<CardLabel>Crypto</CardLabel>} style={{ marginBottom: '9px' }}>
+        <MarketTable data={store.crypto} nameLabel="Asset" priceLabel="Price" />
       </Card>
 
       <div className="mg">
-        <Card label="▸ Precious & Base Metals">
+        <Card label={<CardLabel>Precious & Base Metals</CardLabel>}>
           <MarketTable data={store.metals} nameLabel="Metal" />
         </Card>
-        <Card label="▸ Energy Commodities">
+        <Card label={<CardLabel>Energy Commodities</CardLabel>}>
           <MarketTable data={store.commodities} nameLabel="Commodity" />
         </Card>
       </div>
 
       <div className="mg">
-        <Card label="▸ US Treasury Yields">
+        <Card label={<CardLabel>US Treasury Yields</CardLabel>}>
           <MarketTable data={store.yields} nameLabel="Tenor" isYield priceLabel="Yield%" />
         </Card>
-        <Card label="▸ Global Market Indices">
+        <Card label={<CardLabel>Global Market Indices</CardLabel>}>
           <MarketTable data={store.global} nameLabel="Index" />
         </Card>
       </div>

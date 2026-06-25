@@ -1,5 +1,6 @@
 import { useChartModal } from '../../context/ChartModalContext';
 import { colors } from '../../utils/formatting';
+import { Icon } from './Icon';
 
 export function TradingViewModal() {
   const { chart, closeChart } = useChartModal();
@@ -20,7 +21,8 @@ export function TradingViewModal() {
             {chart.name} · {chart.tvSym}
           </div>
           <button type="button" onClick={closeChart}>
-            ✕ &nbsp;CLOSE
+            <Icon name="close" size="xs" />
+            CLOSE
           </button>
         </div>
         <div id="tv-frame-wrap">
@@ -65,7 +67,7 @@ export function SymbolLink({
         fontWeight: 500,
         fontSize: '12px',
         fontFamily: 'inherit',
-        borderBottom: '1px dotted rgba(120,150,180,0.4)',
+        borderBottom: `1px dotted ${colors.linkUnderline}`,
       }}
     >
       {flag ? `${flag} ` : ''}

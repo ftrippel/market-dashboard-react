@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { FormattedNumberInput, Section } from '../../components/common';
+import { FormattedNumberInput, Icon, Section } from '../../components/common';
 import { colors, formatUsCurrency, formatUsInteger } from '../../utils/formatting';
 
 type Direction = 'long' | 'short';
@@ -107,21 +107,24 @@ export function PositionCalculator() {
     <Section number="04" title="Position Sizing Calculator" subtitle="RISK-BASED · STAGGERED STOPS">
       <div className="calc-wrap">
         <div className="cpanel">
-          <div className="c-ttl">▸ Trade Parameters</div>
+          <div className="c-ttl">
+            <Icon name="chevron_right" size="sm" className="icon--label" />
+            Trade Parameters
+          </div>
           <div className="dir-tog">
             <button
               type="button"
               className={`dir-b long${direction === 'long' ? ' on' : ''}`}
               onClick={() => setDirection('long')}
             >
-              ▲ LONG
+              <Icon name="arrow_upward" size="xs" /> LONG
             </button>
             <button
               type="button"
               className={`dir-b short${direction === 'short' ? ' on' : ''}`}
               onClick={() => setDirection('short')}
             >
-              ▼ SHORT
+              <Icon name="arrow_downward" size="xs" /> SHORT
             </button>
           </div>
 
@@ -182,8 +185,9 @@ export function PositionCalculator() {
 
         <div className="stops-panel">
           <div className="stops-hdr">
-            <span style={{ fontSize: '9px', color: colors.text2, letterSpacing: '1px', textTransform: 'uppercase', marginRight: 'auto' }}>
-              ▸ Staggered Stop Levels
+            <span style={{ fontSize: '9px', color: colors.text2, letterSpacing: '1px', textTransform: 'uppercase', marginRight: 'auto', display: 'inline-flex', alignItems: 'center' }}>
+              <Icon name="chevron_right" size="xs" className="icon--label" />
+              Staggered Stop Levels
             </span>
             <button type="button" className={`s-tab${stops === 2 ? ' on' : ''}`} onClick={() => setStops(2)}>
               2-STOP

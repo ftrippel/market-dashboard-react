@@ -1,12 +1,31 @@
 import React, { useEffect, useRef } from 'react';
-import { colors } from '../../utils/formatting';
+import { getThemeColor } from '../../utils/formatting';
+import { useTheme } from '../../context/ThemeContext';
 
 interface SparklineProps {
   data: number[];
   positive?: boolean;
 }
 
+function hexToRgba(hex: string, alpha: number): string {
+  const normalized = hex.replace('#', '');
+  if (normalized.length !== 6) return hex;
+  const r = parseInt(normalized.slice(0, 2), 16);
+  const g = parseInt(normalized.slice(2, 4), 16);
+  const b = parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function colorWithAlpha(color: string, alpha: number): string {
+  if (color.startsWith('#')) return hexToRgba(color, alpha);
+  if (color.startsWith('rgb(')) {
+    return color.replace('rgb(', 'rgba(').replace(')', `, ${alpha})`);
+  }
+  return color;
+}
+
 export const Sparkline: React.FC<SparklineProps> = ({ data, positive }) => {
+  const { theme } = useTheme();
   const isPositive = positive ?? (data.length > 0 ? data[data.length - 1] >= 0 : true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -31,7 +50,6 @@ export const Sparkline: React.FC<SparklineProps> = ({ data, positive }) => {
       y: h - ((v - min) / range) * (h - 4) - 2,
     }));
 
-    // Draw gradient fill
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     points.slice(1).forEach((p) => ctx.lineTo(p.x, p.y));
@@ -40,20 +58,20 @@ export const Sparkline: React.FC<SparklineProps> = ({ data, positive }) => {
     ctx.closePath();
 
     const gradient = ctx.createLinearGradient(0, 0, 0, h);
-    const color = isPositive ? colors.green : colors.red;
-    gradient.addColorStop(0, color.replace(')', ', 0.25)').replace('rgb', 'rgba'));
-    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+    const color = getThemeColor(isPositive ? 'green' : 'red');
+    const fade = getThemeColor('bg');
+    gradient.addColorStop(0, colorWithAlpha(color, 0.25));
+    gradient.addColorStop(1, colorWithAlpha(fade, 0));
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Draw line
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     points.slice(1).forEach((p) => ctx.lineTo(p.x, p.y));
     ctx.strokeStyle = color;
     ctx.lineWidth = 1.5;
     ctx.stroke();
-  }, [data, isPositive]);
+  }, [data, isPositive, theme]);
 
   return (
     <canvas

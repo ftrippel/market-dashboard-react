@@ -4,6 +4,7 @@ import { colors, formatPrice } from '../../utils/formatting';
 import type { Holding, MarketData, MarketTableOptions } from '../../types';
 import { Sparkline } from './Sparkline';
 import { BpsCell, PctCell } from './PctCell';
+import { Icon } from './Icon';
 import { SymbolLink } from './TradingViewModal';
 
 type SortKey = 'name' | 'price' | 'd1' | 'w1' | 'hi52' | 'ytd' | 'ema_uptrend';
@@ -86,7 +87,10 @@ function SortableHeader({
       >
         <span>{label}</span>
         <span className="th-sort-icon" aria-hidden>
-          {active ? (order === 'asc' ? '▲' : '▼') : '↕'}
+          <Icon
+            name={active ? (order === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}
+            size="xs"
+          />
         </span>
       </button>
     </th>
@@ -107,7 +111,7 @@ function RankBadge({ rank }: { rank: number }) {
         borderRadius: '2px',
         fontSize: '9.5px',
         fontWeight: 600,
-        background: top ? 'rgba(255,143,0,.1)' : colors.bg4,
+        background: top ? colors.rankTopBg : colors.bg4,
         color: top ? colors.amber : colors.text3,
       }}
     >
@@ -120,14 +124,14 @@ function TrendCell({ value }: { value?: boolean }) {
   if (value === true) {
     return (
       <span className="ema-up" title="10-EMA > 20-EMA · Short-term uptrend" style={{ color: colors.green, fontSize: '13px', fontWeight: 600 }}>
-        ✓
+        <Icon name="check" size="sm" />
       </span>
     );
   }
   if (value === false) {
     return (
       <span className="ema-dn" title="10-EMA ≤ 20-EMA" style={{ color: colors.text3, fontSize: '12px', opacity: 0.5 }}>
-        ✗
+        <Icon name="close" size="sm" />
       </span>
     );
   }
@@ -160,14 +164,8 @@ function HoldingsButton({
         letterSpacing: '0.5px',
       }}
     >
-      <span
-        style={{
-          transition: 'transform .2s',
-          display: 'inline-block',
-          transform: expanded ? 'rotate(90deg)' : undefined,
-        }}
-      >
-        ▸
+      <span className={`expand-chevron${expanded ? ' open' : ''}`}>
+        <Icon name="chevron_right" size="xs" />
       </span>{' '}
       TOP 10
     </button>
@@ -346,8 +344,8 @@ export const MarketTable: React.FC<MarketTableProps> = ({
               <tr
                 className={isBenchmark ? 'bench-row' : undefined}
                 style={{
-                  borderBottom: `1px solid rgba(31,90,255,.1)`,
-                  background: isBenchmark ? 'rgba(31,90,255,.04)' : undefined,
+                  borderBottom: `1px solid ${colors.rowBorder}`,
+                  background: isBenchmark ? colors.benchRowBg : undefined,
                 }}
               >
                 {rank && (

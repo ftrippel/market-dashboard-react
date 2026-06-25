@@ -27,7 +27,7 @@ export const Section: React.FC<SectionProps> = ({ number, title, subtitle, child
             color: colors.accent,
             letterSpacing: '2px',
             padding: '2px 7px',
-            border: `1px solid rgba(31,90,255,.2)`,
+            border: `1px solid ${colors.accentBorderSoft}`,
             borderRadius: '2px',
             fontFamily: 'IBM Plex Mono, monospace',
           }}

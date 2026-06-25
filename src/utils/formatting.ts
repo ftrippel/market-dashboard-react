@@ -62,22 +62,46 @@ export function getChangeColor(value: number): 'text-green' | 'text-red' | 'text
   return 'text-neutral';
 }
 
+/** CSS custom properties — resolved per theme via App.css */
 export const colors = {
-  bg: '#ffffff',
-  bg2: '#f7f8fa',
-  bg3: '#eff2f6',
-  bg4: '#e8ecf2',
-  border: '#d0d7e0',
-  border2: '#c0c7d0',
-  accent: '#1f5aff',
-  accent2: '#0047cc',
-  green: '#0caf42',
-  red: '#f23645',
-  amber: '#ff8f00',
-  text: '#2a2e37',
-  text2: '#686d78',
-  text3: '#9ba0a9',
-};
+  bg: 'var(--bg)',
+  bg2: 'var(--bg2)',
+  bg3: 'var(--bg3)',
+  bg4: 'var(--bg4)',
+  border: 'var(--border)',
+  border2: 'var(--border2)',
+  accent: 'var(--accent)',
+  accent2: 'var(--accent2)',
+  green: 'var(--green)',
+  red: 'var(--red)',
+  amber: 'var(--amber)',
+  text: 'var(--text)',
+  text2: 'var(--text2)',
+  text3: 'var(--text3)',
+  accentHoverBg: 'var(--accent-hover-bg)',
+  accentSubtleBg: 'var(--accent-subtle-bg)',
+  accentBorder: 'var(--accent-border)',
+  accentBorderSoft: 'var(--accent-border-soft)',
+  amberSubtleBg: 'var(--amber-subtle-bg)',
+  amberBorder: 'var(--amber-border)',
+  greenDimBg: 'var(--green-dim-bg)',
+  redDimBg: 'var(--red-dim-bg)',
+  neutralDimBg: 'var(--neutral-dim-bg)',
+  rankTopBg: 'var(--rank-top-bg)',
+  rowBorder: 'var(--row-border)',
+  rowHoverBg: 'var(--row-hover-bg)',
+  benchRowBg: 'var(--bench-row-bg)',
+  linkUnderline: 'var(--link-underline)',
+} as const;
+
+export type ColorKey = keyof typeof colors;
+
+/** Read a resolved theme color (for canvas, etc.). */
+export function getThemeColor(key: ColorKey): string {
+  if (typeof document === 'undefined') return '';
+  const varName = colors[key].slice(4, -1);
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
 
 const BERLIN_TZ = 'Europe/Berlin';
 
