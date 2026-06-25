@@ -175,11 +175,9 @@ function HoldingsButton({
 }
 
 function HoldingsPanel({
-  sym,
   displayName,
   holdings,
 }: {
-  sym: string;
   displayName: string;
   holdings: Holding[];
 }) {
@@ -411,7 +409,7 @@ export const MarketTable: React.FC<MarketTableProps> = ({
               {showHoldings && isExpanded && symHoldings?.length ? (
                 <tr className="holdings-row show">
                   <td colSpan={colCount} style={{ padding: 0 }}>
-                    <HoldingsPanel sym={item.sym} displayName={displayName} holdings={symHoldings} />
+                    <HoldingsPanel displayName={displayName} holdings={symHoldings} />
                   </td>
                 </tr>
               ) : null}
