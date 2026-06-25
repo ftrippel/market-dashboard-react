@@ -67,6 +67,7 @@ export function EquitiesSection() {
         style={{ marginBottom: '9px' }}
         tableProps={{
           nameLabel: 'Theme / ETF',
+          hasPrice: false,
           showTrend: true,
           showHoldings: true,
           ...rankByW1,
@@ -80,6 +81,7 @@ export function EquitiesSection() {
         holdings={store.holdings}
         tableProps={{
           nameLabel: 'Country / ETF',
+          hasPrice: false,
           showTrend: true,
           showHoldings: true,
           ...rankByW1,

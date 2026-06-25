@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <Icon name={theme === 'light' ? 'dark_mode' : 'light_mode'} size="sm" />
         </button>
-        <button type="button" className="btn btn-snap" onClick={onSnap}>
+        <button type="button" className="btn btn-x" onClick={onSnap}>
           <Icon name="photo_camera" size="sm" />
           SNAP
         </button>
@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({
           <XIcon size={13} />
           SHARE
         </button>
-        <button type="button" className="btn btn-copy" onClick={onCopy}>
+        <button type="button" className="btn btn-x" onClick={onCopy}>
           <Icon name="content_copy" size="sm" />
           COPY
         </button>

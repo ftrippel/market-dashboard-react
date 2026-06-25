@@ -4,7 +4,7 @@
     <script>
       (function () {
         try {
-          if (localStorage.getItem('market-dashboard-theme') === 'dark') {
+          if (localStorage.getItem('market-dashboard-theme') !== 'light') {
             document.documentElement.setAttribute('data-theme', 'dark');
           }
         } catch (_) {}
