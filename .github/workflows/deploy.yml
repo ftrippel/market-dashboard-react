@@ -4,9 +4,15 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # GITHUB_TOKEN pushes (e.g. fetch-data) do not trigger push workflows
+  workflow_run:
+    workflows: [Fetch Market Data]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: pages
@@ -14,6 +20,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
