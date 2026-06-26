@@ -73,7 +73,7 @@ COUNTRY    = ['GREK','ARGT','EWS','EWP','EUFN','MCHI','EWZ','EWI','EWY','EWH',
               'EZU','EEM','EFA','EWD','TUR','EZA','ACWI','KSA','EIDO','EWJ','EWT','THD']
 FUTURES    = ['ES=F','NQ=F','RTY=F','YM=F']
 METALS     = ['GC=F','SI=F','HG=F','PL=F','PA=F']
-ENERGY     = ['CL=F','NG=F']
+ENERGY     = ['CL=F','NG=F','USO']
 GLOBAL_IDX = ['^N225','^KS11','^NSEI','000001.SS','000300.SS','^HSI','^FTSE','^FCHI','^GDAXI']
 YIELDS     = ['^TNX','^TYX']
 DX_VIX     = ['DX-Y.NYB','^VIX']

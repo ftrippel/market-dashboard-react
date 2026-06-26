@@ -1,4 +1,5 @@
-import React, { useEffect, useId } from 'react';
+import React, { useEffect, useId, useState } from 'react';
+import { copySnapshotText } from '../../services/share';
 import { colors } from '../../utils/formatting';
 import type { Holding } from '../../types';
 import { Icon } from './Icon';
@@ -33,6 +34,18 @@ export const HoldingsFlyover: React.FC<HoldingsFlyoverProps> = ({
   onClose,
 }) => {
   const titleId = useId();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopySymbols = async () => {
+    const text = holdings.map((holding) => holding.s).join(', ');
+    try {
+      await copySnapshotText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -69,6 +82,10 @@ export const HoldingsFlyover: React.FC<HoldingsFlyoverProps> = ({
           <div id={titleId} className="table-flyover-title">
             Top 10 Holdings — {displayName} · {etfSym}
           </div>
+          <button type="button" onClick={handleCopySymbols} aria-label="Copy holding symbols">
+            <Icon name="content_copy" size="xs" />
+            {copied ? 'COPIED' : 'COPY SYMBOLS'}
+          </button>
           <button type="button" onClick={onClose}>
             <Icon name="close" size="xs" />
             CLOSE

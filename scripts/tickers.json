@@ -21,7 +21,7 @@
   ],
   "futures":  ["ES=F","NQ=F","RTY=F","YM=F"],
   "metals":   ["GC=F","SI=F","HG=F","PL=F","PA=F"],
-  "energy":   ["CL=F","NG=F"],
+  "energy":   ["CL=F","NG=F","USO"],
   "global":   ["^N225","^KS11","^NSEI","000001.SS","000300.SS","^HSI","^FTSE","^FCHI","^GDAXI"],
   "yields":   ["^TNX","^TYX"],
   "dxvix":    ["DX-Y.NYB","^VIX"],
