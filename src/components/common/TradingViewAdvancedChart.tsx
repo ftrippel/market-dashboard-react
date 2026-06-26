@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import {
   TRADINGVIEW_ADVANCED_CHART_SCRIPT,
   buildAdvancedChartWidgetConfig,
@@ -10,7 +10,7 @@ interface TradingViewAdvancedChartProps {
   onReady?: () => void;
 }
 
-export function TradingViewAdvancedChart({
+export const TradingViewAdvancedChart = memo(function TradingViewAdvancedChart({
   symbol,
   theme,
   onReady,
@@ -21,9 +21,10 @@ export function TradingViewAdvancedChart({
     const container = containerRef.current;
     if (!container) return;
 
-    const widget = container.querySelector('.tradingview-widget-container__widget');
-    if (widget) widget.innerHTML = '';
-    container.querySelectorAll('script').forEach((node) => node.remove());
+    const widgetHost = document.createElement('div');
+    widgetHost.className = 'tradingview-widget-container__widget';
+    widgetHost.style.height = '100%';
+    widgetHost.style.width = '100%';
 
     const script = document.createElement('script');
     script.src = TRADINGVIEW_ADVANCED_CHART_SCRIPT;
@@ -37,13 +38,12 @@ export function TradingViewAdvancedChart({
 
     script.addEventListener('load', finishLoading);
     script.addEventListener('error', finishLoading);
-    container.appendChild(script);
+
+    container.replaceChildren(widgetHost, script);
 
     return () => {
       script.removeEventListener('load', finishLoading);
       script.removeEventListener('error', finishLoading);
-      script.remove();
-      if (widget) widget.innerHTML = '';
     };
   }, [symbol, theme, onReady]);
 
@@ -52,8 +52,6 @@ export function TradingViewAdvancedChart({
       ref={containerRef}
       className="tradingview-widget-container tv-advanced-chart"
       style={{ height: '100%', width: '100%' }}
-    >
-      <div className="tradingview-widget-container__widget" style={{ height: '100%', width: '100%' }} />
-    </div>
+    />
   );
-}
+});

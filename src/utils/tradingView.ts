@@ -28,10 +28,10 @@ const TV_SYMBOL_MAP: Record<string, string> = {
   '^GDAXI': 'OANDA:DE30EUR',
   DXY: 'CAPITALCOM:DXY',
   UKX: 'OANDA:UK100GBP',
-  BTC: 'CRYPTOCAP:BTC',
-  ETH: 'CRYPTOCAP:ETH',
-  SOL: 'CRYPTOCAP:SOL',
-  XRP: 'CRYPTOCAP:XRP',
+  BTC: 'COINBASE:BTCUSD',
+  ETH: 'COINBASE:ETHUSD',
+  SOL: 'COINBASE:SOLUSD',
+  XRP: 'COINBASE:XRPUSD',
 };
 
 export const TRADINGVIEW_ADVANCED_CHART_SCRIPT =
@@ -93,6 +93,7 @@ export function buildAdvancedChartWidgetConfig(
     studies: [
       { id: 'MAExp@tv-basicstudies', inputs: { length: 20 } },
       { id: 'MASimple@tv-basicstudies', inputs: { length: 50 } },
+      { id: 'MASimple@tv-basicstudies', inputs: { length: 200 } },
     ],
   };
 }

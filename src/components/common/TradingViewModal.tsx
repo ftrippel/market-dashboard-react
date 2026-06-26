@@ -45,6 +45,7 @@ export function TradingViewModal() {
             </div>
           )}
           <TradingViewAdvancedChart
+            key={`${chart.tvSym}-${theme}`}
             symbol={chart.tvSym}
             theme={theme}
             onReady={handleChartReady}
