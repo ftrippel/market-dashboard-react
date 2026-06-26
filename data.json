@@ -227,6 +227,23 @@
       ],
       "ema_uptrend": true,
       "name": "Natural Gas Jul 26"
+    },
+    {
+      "sym": "USO",
+      "price": 104.87,
+      "d1": -4.06,
+      "w1": -8.71,
+      "hi52": -31.94,
+      "ytd": 52.07,
+      "spark": [
+        -1.9,
+        -1.27,
+        -4.47,
+        2.84,
+        -4.06
+      ],
+      "ema_uptrend": false,
+      "name": "United States Oil Fund"
     }
   ],
   "yields": [
