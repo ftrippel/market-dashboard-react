@@ -38,7 +38,7 @@ export function toTradingViewSymbol(rawSym: string): string {
   return TV_SYMBOL_MAP[rawSym] ?? rawSym;
 }
 
-export function buildTradingViewEmbedUrl(tvSym: string): string {
+export function buildTradingViewEmbedUrl(tvSym: string, theme: 'light' | 'dark' = 'dark'): string {
   const studies = JSON.stringify([
     { id: 'MAExp@tv-basicstudies', inputs: { length: 20 } },
     { id: 'MASimple@tv-basicstudies', inputs: { length: 50 } },
@@ -51,9 +51,9 @@ export function buildTradingViewEmbedUrl(tvSym: string): string {
     hidesidetoolbar: '0',
     symboledit: '1',
     saveimage: '0',
-    toolbarbg: '131722',
+    toolbarbg: theme === 'dark' ? '131722' : 'f1f3f6',
     studies,
-    theme: 'dark',
+    theme,
     style: '1',
     timezone: 'exchange',
     withdateranges: '1',

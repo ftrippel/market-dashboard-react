@@ -1,9 +1,15 @@
+import { useEffect, useState } from 'react';
 import { useChartModal } from '../../context/ChartModalContext';
 import { colors } from '../../utils/formatting';
 import { Icon } from './Icon';
 
 export function TradingViewModal() {
   const { chart, closeChart } = useChartModal();
+  const [frameReady, setFrameReady] = useState(false);
+
+  useEffect(() => {
+    setFrameReady(false);
+  }, [chart.embedUrl]);
 
   if (!chart.open) return null;
 
@@ -25,7 +31,12 @@ export function TradingViewModal() {
             CLOSE
           </button>
         </div>
-        <div id="tv-frame-wrap">
+        <div id="tv-frame-wrap" className={frameReady ? 'ready' : 'loading'}>
+          {!frameReady && (
+            <div className="tv-frame-loading" aria-live="polite">
+              Loading chart...
+            </div>
+          )}
           <iframe
             id="tv-frame"
             title={`TradingView chart for ${chart.name}`}
@@ -34,6 +45,7 @@ export function TradingViewModal() {
             allowTransparency
             scrolling="no"
             allowFullScreen
+            onLoad={() => setFrameReady(true)}
           />
         </div>
       </div>

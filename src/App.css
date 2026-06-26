@@ -41,6 +41,7 @@
   --btn-x-hover-color: #374151;
   --btn-x-hover-border: #9ba0a9;
   --sparkline-fade:    rgba(255, 255, 255, 0);
+  --tv-chart-bg:       #ffffff;
 }
 
 [data-theme="dark"] {
@@ -87,6 +88,7 @@
   --btn-x-hover-color: var(--text);
   --btn-x-hover-border: var(--text3);
   --sparkline-fade:    rgba(15, 20, 25, 0);
+  --tv-chart-bg:       #131722;
 }
 
 * {
@@ -330,14 +332,42 @@ body::before {
 }
 
 #tv-frame-wrap {
+  position: relative;
   flex: 1;
   overflow: hidden;
+  background: var(--tv-chart-bg);
+}
+
+.tv-frame-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--tv-chart-bg);
+  color: var(--text2);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+#tv-frame-wrap.loading #tv-frame {
+  opacity: 0;
+}
+
+#tv-frame-wrap.ready #tv-frame {
+  opacity: 1;
 }
 
 #tv-frame {
   width: 100%;
   height: 100%;
   border: none;
+  background: var(--tv-chart-bg);
+  color-scheme: dark light;
+  transition: opacity .15s ease;
 }
 
 .quote-bar {
