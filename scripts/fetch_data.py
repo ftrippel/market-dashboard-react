@@ -243,33 +243,86 @@ def fetch_treasury_2y():
         resp.raise_for_status()
         reader = csv.reader(StringIO(resp.text))
         rows = list(reader)
-        rate = None
-        for row in reversed(rows[1:]):
+        series_data = []
+        for row in rows[1:]:
             if len(row) == 2 and row[1] not in ('.', '', 'VALUE'):
-                rate = float(row[1])
-                break
-        if rate is not None:
-            print(f"  \u2713 US2Y = {rate}% (FRED)")
-            return {'sym': 'US2Y', 'price': round(rate, 4), 'd1': 0.0, 'w1': 0.0, 'hi52': 0.0, 'ytd': 0.0, 'spark': [0.0]*5}
+                try:
+                    series_data.append((row[0], float(row[1])))
+                except ValueError:
+                    continue
+        if series_data:
+            dates = [d for d, r in series_data]
+            rates = [r for d, r in series_data]
+            price = rates[-1]
+            d1 = round((rates[-1] - rates[-2]) * 100, 1) if len(rates) >= 2 else 0.0
+            w1 = round((rates[-1] - rates[-6]) * 100, 1) if len(rates) >= 6 else 0.0
+            hi_val = max(rates[-252:]) if len(rates) >= 252 else max(rates)
+            hi52 = round((price - hi_val) * 100, 1)
+            this_year = str(datetime.datetime.now().year)
+            ytd_vals = [rates[i] for i in range(len(rates)) if dates[i].startswith(this_year)]
+            ytd = round((price - ytd_vals[0]) * 100, 1) if ytd_vals else 0.0
+            spark = []
+            for i in range(max(1, len(rates) - 5), len(rates)):
+                spark.append(round((rates[i] - rates[i-1]) * 100, 2))
+            while len(spark) < 5:
+                spark.insert(0, 0.0)
+
+            print(f"  ✓ US2Y = {price}% (FRED CSV)")
+            return {
+                'sym': 'US2Y',
+                'price': round(price, 4),
+                'd1': d1,
+                'w1': w1,
+                'hi52': hi52,
+                'ytd': ytd,
+                'spark': spark
+            }
     except Exception as e:
         print(f"  FRED CSV failed: {e}")
+
     try:
         now = datetime.datetime.utcnow()
         url = ("https://home.treasury.gov/resource-center/data-chart-center/"
                "interest-rates/pages/xml?data=daily_treasury_yield_curve"
                f"&field_tdr_date_value={now.strftime('%Y%m')}")
-        resp = requests.get(url, timeout=15)
+        resp = requests.get(url, timeout=15, headers={'User-Agent': 'Mozilla/5.0'})
         resp.raise_for_status()
         ns_m = 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata'
         ns_d = 'http://schemas.microsoft.com/ado/2007/08/dataservices'
         root = ET.fromstring(resp.content)
         entries = root.findall(f'.//{{{ns_m}}}properties')
         if entries:
-            val = entries[-1].find(f'{{{ns_d}}}BC_2YEAR')
-            if val is not None and val.text:
-                rate = float(val.text)
-                print(f"  \u2713 US2Y = {rate}% (Treasury XML)")
-                return {'sym': 'US2Y', 'price': round(rate, 4), 'd1': 0.0, 'w1': 0.0, 'hi52': 0.0, 'ytd': 0.0, 'spark': [0.0]*5}
+            rates = []
+            for entry in entries:
+                val = entry.find(f'{{{ns_d}}}BC_2YEAR')
+                if val is not None and val.text:
+                    try:
+                        rates.append(float(val.text))
+                    except ValueError:
+                        pass
+            if rates:
+                price = rates[-1]
+                d1 = round((rates[-1] - rates[-2]) * 100, 1) if len(rates) >= 2 else 0.0
+                w1 = round((rates[-1] - rates[-6]) * 100, 1) if len(rates) >= 6 else 0.0
+                hi_val = max(rates)
+                hi52 = round((price - hi_val) * 100, 1)
+                ytd = round((price - rates[0]) * 100, 1)
+                spark = []
+                for i in range(max(1, len(rates) - 5), len(rates)):
+                    spark.append(round((rates[i] - rates[i-1]) * 100, 2))
+                while len(spark) < 5:
+                    spark.insert(0, 0.0)
+
+                print(f"  ✓ US2Y = {price}% (Treasury XML)")
+                return {
+                    'sym': 'US2Y',
+                    'price': round(price, 4),
+                    'd1': d1,
+                    'w1': w1,
+                    'hi52': hi52,
+                    'ytd': ytd,
+                    'spark': spark
+                }
     except Exception as e:
         print(f"  Treasury XML failed: {e}")
     return None
@@ -318,25 +371,25 @@ def fetch_massive_treasury_yields():
                 continue
             price    = series[-1]
             d1_bps   = round((series[-1] - series[-2]) * 100, 1)
-            w1       = pct(series[-1], series[-6]) if len(series) >= 6 else 0.0
+            w1_bps   = round((series[-1] - series[-6]) * 100, 1) if len(series) >= 6 else 0.0
             hi_val   = max(series[-252:]) if len(series) >= 252 else max(series)
-            hi52_pct = pct(price, hi_val)
+            hi52_bps = round((price - hi_val) * 100, 1)
             this_year = str(datetime.datetime.now().year)
             ytd_vals  = [_get(r, fields) for r in results if r.get('date', '').startswith(this_year)]
             ytd_vals  = [v for v in ytd_vals if v is not None]
-            ytd       = pct(price, ytd_vals[0]) if ytd_vals else 0.0
+            ytd_bps   = round((price - ytd_vals[0]) * 100, 1) if ytd_vals else 0.0
             spark_vals = []
             for i in range(max(1, len(series) - 5), len(series)):
-                spark_vals.append(round(pct(series[i], series[i-1]), 2))
+                spark_vals.append(round((series[i] - series[i-1]) * 100, 2))
             while len(spark_vals) < 5:
                 spark_vals.insert(0, 0.0)
             yield_records.append({
                 'sym':   sym,
                 'price': round(price, 4),
                 'd1':    d1_bps,
-                'w1':    round(w1, 2),
-                'hi52':  round(hi52_pct, 2),
-                'ytd':   round(ytd, 2),
+                'w1':    w1_bps,
+                'hi52':  hi52_bps,
+                'ytd':   ytd_bps,
                 'spark': spark_vals,
             })
             print(f"  \u2713 {sym}: {price:.4f}% (d1={d1_bps:+.1f}bps)")
@@ -539,16 +592,32 @@ def extract_metrics(df, sym):
         return None
     closes = df['Close'].values
     price  = float(closes[-1])
-    d1     = pct(closes[-1], closes[-2]) if len(closes) >= 2 else 0.0
-    w1     = pct(closes[-1], closes[-6]) if len(closes) >= 6 else 0.0
-    hi52_price = float(df['High'].max()) if 'High' in df else price
-    hi52_pct   = pct(price, hi52_price)
-    this_year  = datetime.datetime.now().year
-    ytd_df     = df[df.index.year == this_year]
-    ytd        = pct(price, float(ytd_df['Close'].iloc[0])) if len(ytd_df) > 0 else 0.0
-    spark = []
-    for i in range(max(1, len(closes)-5), len(closes)):
-        spark.append(round(pct(closes[i], closes[i-1]), 2))
+
+    is_yield = sym in YIELDS or sym in ('US10Y', 'US30Y', 'US2Y', '^TNX', '^TYX')
+
+    if is_yield:
+        d1     = round((closes[-1] - closes[-2]) * 100, 1) if len(closes) >= 2 else 0.0
+        w1     = round((closes[-1] - closes[-6]) * 100, 1) if len(closes) >= 6 else 0.0
+        hi52_price = float(df['High'].max()) if 'High' in df else price
+        hi52_pct   = round((price - hi52_price) * 100, 1)
+        this_year  = datetime.datetime.now().year
+        ytd_df     = df[df.index.year == this_year]
+        ytd        = round((price - float(ytd_df['Close'].iloc[0])) * 100, 1) if len(ytd_df) > 0 else 0.0
+        spark = []
+        for i in range(max(1, len(closes)-5), len(closes)):
+            spark.append(round((closes[i] - closes[i-1]) * 100, 2))
+    else:
+        d1     = pct(closes[-1], closes[-2]) if len(closes) >= 2 else 0.0
+        w1     = pct(closes[-1], closes[-6]) if len(closes) >= 6 else 0.0
+        hi52_price = float(df['High'].max()) if 'High' in df else price
+        hi52_pct   = pct(price, hi52_price)
+        this_year  = datetime.datetime.now().year
+        ytd_df     = df[df.index.year == this_year]
+        ytd        = pct(price, float(ytd_df['Close'].iloc[0])) if len(ytd_df) > 0 else 0.0
+        spark = []
+        for i in range(max(1, len(closes)-5), len(closes)):
+            spark.append(round(pct(closes[i], closes[i-1]), 2))
+
     while len(spark) < 5:
         spark.insert(0, 0.0)
     # 10-EMA vs 20-EMA uptrend signal

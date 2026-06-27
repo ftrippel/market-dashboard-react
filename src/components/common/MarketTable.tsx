@@ -203,21 +203,21 @@ export const MarketTable: React.FC<MarketTableProps> = ({
             onSort={handleSort}
           />
           <SortableHeader
-            label="1W%"
+            label={isYield ? '1W (bps)' : '1W%'}
             sortKey="w1"
             activeKey={sort.key}
             order={sort.order}
             onSort={handleSort}
           />
           <SortableHeader
-            label="52W Hi%"
+            label={isYield ? '52W Hi (bps)' : '52W Hi%'}
             sortKey="hi52"
             activeKey={sort.key}
             order={sort.order}
             onSort={handleSort}
           />
           <SortableHeader
-            label="YTD%"
+            label={isYield ? 'YTD (bps)' : 'YTD%'}
             sortKey="ytd"
             activeKey={sort.key}
             order={sort.order}
@@ -269,16 +269,16 @@ export const MarketTable: React.FC<MarketTableProps> = ({
                   <td style={{ ...tdStyle, textAlign: 'right', color: colors.text3 }}>—</td>
                 )}
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
-                  {isYield ? <BpsCell value={item.d1} /> : <PctCell value={item.d1} />}
+                  {isYield ? <BpsCell value={item.d1} maxBps={25} /> : <PctCell value={item.d1} />}
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
-                  <PctCell value={item.w1} />
+                  {isYield ? <BpsCell value={item.w1} maxBps={50} /> : <PctCell value={item.w1} />}
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
-                  <PctCell value={item.hi52} maxPct={30} />
+                  {isYield ? <BpsCell value={item.hi52} maxBps={150} /> : <PctCell value={item.hi52} maxPct={30} />}
                 </td>
                 <td style={{ ...tdStyle, textAlign: 'right' }}>
-                  <PctCell value={item.ytd} maxPct={20} />
+                  {isYield ? <BpsCell value={item.ytd} maxBps={100} /> : <PctCell value={item.ytd} maxPct={20} />}
                 </td>
                 {showSpark && (
                   <td style={{ ...tdStyle, textAlign: 'center', padding: '4px 8px' }}>
