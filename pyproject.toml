@@ -3,9 +3,9 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "market-dashboard-react"
+name = "market-dashboard"
 version = "1.0.0"
-description = "Market Dashboard React — data fetch tooling"
+description = "Market Dashboard"
 requires-python = ">=3.8"
 dependencies = [
     "yfinance>=0.2.28",

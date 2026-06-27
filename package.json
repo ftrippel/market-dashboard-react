@@ -1,5 +1,5 @@
 {
-  "name": "market-dashboard-react",
+  "name": "market-dashboard",
   "private": true,
   "version": "0.0.0",
   "packageManager": "npm@10.9.8",
@@ -12,7 +12,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "verify:dist": "npm run build && node scripts/verify-dist.mjs",
-    "preview:pages": "vite preview --base /market-dashboard-react/",
+    "preview:pages": "vite preview --base /market-dashboard/",
     "lint": "oxlint",
     "preview": "vite preview"
   },

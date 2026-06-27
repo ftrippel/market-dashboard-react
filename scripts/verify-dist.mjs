@@ -13,8 +13,8 @@ for (const file of required) {
 }
 
 const index = readFileSync(join(dist, 'index.html'), 'utf8');
-if (!index.includes('/market-dashboard-react/')) {
-  console.error('index.html is missing the GitHub Pages base path (/market-dashboard-react/)');
+if (!index.includes('/market-dashboard/')) {
+  console.error('index.html is missing the GitHub Pages base path (/market-dashboard/)');
   process.exit(1);
 }
 

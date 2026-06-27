@@ -47,8 +47,8 @@ To fetch fresh market data locally, you also need [uv](https://docs.astral.sh/uv
 ## Installation
 
 ```bash
-git clone https://github.com/ftrippel/market-dashboard-react.git
-cd market-dashboard-react
+git clone https://github.com/ftrippel/market-dashboard.git
+cd market-dashboard
 npm install
 ```
 
@@ -95,7 +95,7 @@ YF_BATCH_SIZE=15 YF_BATCH_PAUSE=2 ./fetch-data.sh
 
 ## Deployment
 
-Production builds use the GitHub Pages base path `/market-dashboard-react/`. After each 6-hour data fetch (or any push to `main`), GitHub Actions builds and deploys to the `gh-pages` branch.
+Production builds use the GitHub Pages base path `/market-dashboard/`. After each 6-hour data fetch (or any push to `main`), GitHub Actions builds and deploys to the `gh-pages` branch.
 
 ## License
 
