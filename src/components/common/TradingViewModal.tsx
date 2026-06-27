@@ -75,10 +75,12 @@ export function SymbolLink({
   sym,
   name,
   flag,
+  label,
 }: {
   sym: string;
   name: string;
   flag?: string;
+  label?: string;
 }) {
   const { openChart } = useChartModal();
 
@@ -101,7 +103,7 @@ export function SymbolLink({
       }}
     >
       {flag ? `${flag} ` : ''}
-      {name}
+      {label ?? name}
     </button>
   );
 }

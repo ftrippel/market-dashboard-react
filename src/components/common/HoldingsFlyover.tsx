@@ -3,6 +3,8 @@ import { copySnapshotText } from '../../services/share';
 import { colors } from '../../utils/formatting';
 import type { Holding } from '../../types';
 import { Icon } from './Icon';
+import { useChartModal } from '../../context/ChartModalContext';
+import { SymbolLink } from './TradingViewModal';
 
 interface HoldingsFlyoverProps {
   etfSym: string;
@@ -35,6 +37,7 @@ export const HoldingsFlyover: React.FC<HoldingsFlyoverProps> = ({
 }) => {
   const titleId = useId();
   const [copied, setCopied] = useState(false);
+  const { chart } = useChartModal();
 
   const handleCopySymbols = async () => {
     const text = holdings.map((holding) => holding.s).join(', ');
@@ -49,11 +52,14 @@ export const HoldingsFlyover: React.FC<HoldingsFlyoverProps> = ({
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        if (chart.open) return;
+        onClose();
+      }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, [onClose, chart.open]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -115,8 +121,8 @@ export const HoldingsFlyover: React.FC<HoldingsFlyoverProps> = ({
                       borderBottom: `1px solid ${colors.rowBorder}`,
                     }}
                   >
-                    <td style={{ ...tdStyle, textAlign: 'left', color: colors.text, fontWeight: 500 }}>
-                      {holding.s}
+                    <td style={{ ...tdStyle, textAlign: 'left' }}>
+                      <SymbolLink sym={holding.s} name={holding.n} label={holding.s} />
                     </td>
                     <td style={{ ...tdStyle, textAlign: 'left', color: colors.text2 }}>{holding.n}</td>
                     <td style={{ ...tdStyle, textAlign: 'right', color: colors.accent, fontWeight: 500 }}>

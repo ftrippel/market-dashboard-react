@@ -3,6 +3,7 @@ import type { Holding, MarketData, MarketTableOptions } from '../../types';
 import { Card } from './Card';
 import { Icon } from './Icon';
 import { MarketTable } from './MarketTable';
+import { useChartModal } from '../../context/ChartModalContext';
 
 interface ExpandableTableCardProps {
   label: React.ReactNode;
@@ -26,15 +27,20 @@ export const ExpandableTableCard: React.FC<ExpandableTableCardProps> = ({
   const [open, setOpen] = useState(false);
   const titleId = useId();
   const canExpand = data.length > previewCount;
+  const { chart } = useChartModal();
 
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
+      if (event.key === 'Escape') {
+        if (chart.open) return;
+        setOpen(false);
+      }
     };
+
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [open]);
+  }, [open, chart.open]);
 
   useEffect(() => {
     if (!open) return;
