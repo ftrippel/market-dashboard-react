@@ -1,10 +1,11 @@
 import React from 'react';
-import { colors } from '../../utils/formatting';
+import { colors, formatDataTimestamp } from '../../utils/formatting';
 import { useTheme } from '../../context/ThemeContext';
 import { Icon, XIcon } from './Icon';
 
 interface HeaderProps {
   loading: boolean;
+  generatedAt?: string | null;
   badgeLabel?: string;
   badgeOk?: boolean;
   onSnap?: () => void;
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   loading,
+  generatedAt,
   badgeLabel,
   badgeOk,
   onSnap,
@@ -34,7 +36,13 @@ export const Header: React.FC<HeaderProps> = ({
           day: 'numeric',
         })
       );
-      setTime(now.toLocaleTimeString('en-US', { hour12: false }));
+      
+      const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+      const tzStr = new Intl.DateTimeFormat('en-GB', { timeZoneName: 'short' })
+        .formatToParts(now)
+        .find((part) => part.type === 'timeZoneName')?.value ?? '';
+      
+      setTime(tzStr ? `${timeStr} ${tzStr}` : timeStr);
     };
 
     updateTime();
@@ -42,7 +50,8 @@ export const Header: React.FC<HeaderProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  const badgeText = badgeLabel ?? (loading ? 'LOADING DATA...' : 'DATA READY');
+  const formattedInfo = formatDataTimestamp(generatedAt ?? null);
+  const badgeText = badgeLabel ?? formattedInfo?.badge ?? (loading ? 'LOADING DATA...' : 'DATA READY');
   const badgeColor = loading ? colors.text3 : badgeOk ? colors.green : colors.amber;
 
   return (

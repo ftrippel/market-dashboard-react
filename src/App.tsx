@@ -15,7 +15,7 @@ import {
   downloadDashboardSnapshot,
   shareDashboardToX,
 } from './services/share';
-import { colors, formatDataTimestamp } from './utils/formatting';
+import { colors } from './utils/formatting';
 import { Icon } from './components/common/Icon';
 import './App.css';
 
@@ -26,7 +26,6 @@ function DashboardContent() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastDuration, setToastDuration] = useState(3200);
   const [snapFlash, setSnapFlash] = useState(false);
-  const dataTimestamp = formatDataTimestamp(store.generatedAt);
 
   const showToast = useCallback((message: string, durationMs = 3200) => {
     setToastDuration(durationMs);
@@ -92,7 +91,7 @@ function DashboardContent() {
       <div className="wrap" ref={wrapRef}>
         <Header
           loading={store.loading}
-          badgeLabel={dataTimestamp?.badge ?? 'LOADING DATA...'}
+          generatedAt={store.generatedAt}
           badgeOk={dataReady}
           onSnap={handleSnap}
           onShareX={handleShareX}

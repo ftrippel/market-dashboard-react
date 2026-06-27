@@ -128,14 +128,21 @@ export function formatDataTimestamp(iso: string | null): DataTimestampInfo | nul
     hour12: false,
   }).format(dt);
 
-  const ageMs = Date.now() - dt.getTime();
+  const ageMs = Math.max(0, Date.now() - dt.getTime());
   const ageHrs = Math.floor(ageMs / 3_600_000);
-  const ageMins = Math.floor(ageMs / 60_000);
-  const ageLabel =
-    ageMins < 1 ? 'just now' : ageHrs < 1 ? `${ageMins}m ago` : ageHrs === 1 ? '1h ago' : `${ageHrs}h ago`;
+  const ageMins = Math.floor((ageMs % 3_600_000) / 60_000);
+
+  let ageLabel: string;
+  if (ageHrs > 0) {
+    ageLabel = `${ageHrs}h ${ageMins}m ago`;
+  } else if (ageMins > 0) {
+    ageLabel = `${ageMins}m ago`;
+  } else {
+    ageLabel = 'just now';
+  }
 
   return {
-    badge: `DATA · ${formatted}`,
+    badge: `DATA · ${formatted} (${ageLabel})`,
     statusLine: `Generated ${formatted} · ${ageLabel}`,
     ageLabel,
   };
