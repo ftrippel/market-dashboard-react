@@ -248,6 +248,7 @@ export const MarketTable: React.FC<MarketTableProps> = ({
           return (
             <tr
               key={item.sym}
+              data-symbol={item.sym}
               className={isBenchmark ? 'bench-row' : undefined}
               style={{
                 borderBottom: `1px solid ${colors.rowBorder}`,

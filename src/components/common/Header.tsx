@@ -8,6 +8,8 @@ interface HeaderProps {
   generatedAt?: string | null;
   badgeLabel?: string;
   badgeOk?: boolean;
+  liveEnabled: boolean;
+  onToggleLive: () => void;
   onSnap?: () => void;
   onShareX?: () => void;
   onCopy?: () => void;
@@ -18,6 +20,8 @@ export const Header: React.FC<HeaderProps> = ({
   generatedAt,
   badgeLabel,
   badgeOk,
+  liveEnabled,
+  onToggleLive,
   onSnap,
   onShareX,
   onCopy,
@@ -93,6 +97,27 @@ export const Header: React.FC<HeaderProps> = ({
           aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
         >
           <Icon name={theme === 'light' ? 'dark_mode' : 'light_mode'} size="sm" />
+        </button>
+        <button
+          type="button"
+          className="btn btn-x"
+          onClick={onToggleLive}
+          title={liveEnabled ? 'Disable live data refresh' : 'Enable live data refresh'}
+          style={liveEnabled ? { borderColor: colors.green, color: colors.green, background: colors.greenDimBg } : undefined}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: liveEnabled ? colors.green : colors.text3,
+              boxShadow: liveEnabled ? `0 0 6px ${colors.green}` : 'none',
+              animation: liveEnabled ? 'blink 2s infinite' : 'none',
+              marginRight: '2px',
+            }}
+          />
+          <span>{liveEnabled ? 'LIVE ON' : 'LIVE'}</span>
         </button>
         <button type="button" className="btn btn-x" onClick={onSnap}>
           <Icon name="photo_camera" size="sm" />

@@ -70,3 +70,76 @@ function transformData(raw: RawData): MarketState {
     error: null,
   };
 }
+
+const DASHBOARD_TO_YFINANCE: Record<string, string> = {
+  // Futures
+  'ES1!': 'ES=F',
+  'NQ1!': 'NQ=F',
+  'RTY1!': 'RTY=F',
+  'YM1!': 'YM=F',
+  // Metals
+  'GC1!': 'GC=F',
+  'SI1!': 'SI=F',
+  'HG1!': 'HG=F',
+  'PL1!': 'PL=F',
+  'PA1!': 'PA=F',
+  // Commodities
+  'CL1!': 'CL=F',
+  'NG1!': 'NG=F',
+  // Yields
+  'US10Y': '^TNX',
+  'US30Y': '^TYX',
+  // VIX
+  'CBOE:VIX': '^VIX',
+  // Crypto
+  'BTC': 'BTC-USD',
+  'ETH': 'ETH-USD',
+  'SOL': 'SOL-USD',
+  'XRP': 'XRP-USD',
+};
+
+function getYahooFinanceSymbol(sym: string): string {
+  return DASHBOARD_TO_YFINANCE[sym] ?? sym;
+}
+
+export async function fetchYahooFinancePrice(sym: string): Promise<{ price: number; d1: number } | null> {
+  if (sym === 'US2Y') return null; // Skip FRED-only yield
+
+  const yfSym = getYahooFinanceSymbol(sym);
+  const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yfSym)}?interval=1m&range=1d`;
+  const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`;
+
+  const res = await fetch(proxyUrl);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch live price for ${sym}: HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  const meta = data?.chart?.result?.[0]?.meta;
+  if (!meta) return null;
+
+  let currentPrice = meta.regularMarketPrice;
+  let prevClose = meta.previousClose ?? meta.chartPreviousClose;
+  if (currentPrice == null || prevClose == null || prevClose === 0) return null;
+
+  const isYield = sym === 'US10Y' || sym === 'US30Y';
+  
+  if (isYield) {
+    // If the index is scaled by 10 (e.g. 44.0 instead of 4.4), scale it down
+    if (currentPrice > 10) currentPrice = currentPrice / 10;
+    if (prevClose > 10) prevClose = prevClose / 10;
+  }
+
+  const d1 = isYield
+    ? (currentPrice - prevClose) * 100
+    : ((currentPrice - prevClose) / prevClose) * 100;
+
+  return {
+    price: currentPrice,
+    d1: roundToDecimals(d1, isYield ? 1 : 2),
+  };
+}
+
+function roundToDecimals(val: number, decimals: number): number {
+  const p = Math.pow(10, decimals);
+  return Math.round(val * p) / p;
+}

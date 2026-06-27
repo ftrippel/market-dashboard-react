@@ -1,4 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
+import { fetchYahooFinancePrice } from './services/api';
 import { Header, Toast, TradingViewModal } from './components/common';
 import { ChartModalProvider } from './context/ChartModalContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -19,6 +20,31 @@ import { colors } from './utils/formatting';
 import { Icon } from './components/common/Icon';
 import './App.css';
 
+function getVisibleSymbols(): string[] {
+  const elements = document.querySelectorAll('[data-symbol]');
+  const visible: string[] = [];
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+
+  elements.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    const isVisible =
+      rect.bottom > 0 &&
+      rect.right > 0 &&
+      rect.top < viewportHeight &&
+      rect.left < viewportWidth;
+
+    if (isVisible) {
+      const sym = el.getAttribute('data-symbol');
+      if (sym && !visible.includes(sym)) {
+        visible.push(sym);
+      }
+    }
+  });
+
+  return visible;
+}
+
 function DashboardContent() {
   const store = useMarketStore();
   const { error: dataError } = useMarketData();
@@ -26,6 +52,55 @@ function DashboardContent() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastDuration, setToastDuration] = useState(3200);
   const [snapFlash, setSnapFlash] = useState(false);
+  const [liveEnabled, setLiveEnabled] = useState(false);
+
+  // Background process for Live Data refresh
+  useEffect(() => {
+    if (!liveEnabled) return;
+
+    let active = true;
+    let timeoutId: number | undefined;
+    const updatedSymbols = new Set<string>();
+
+    const updateNext = async () => {
+      if (!active) return;
+
+      const visible = getVisibleSymbols();
+      if (visible.length === 0) {
+        timeoutId = window.setTimeout(updateNext, 2000);
+        return;
+      }
+
+      let nextSym = visible.find((sym) => !updatedSymbols.has(sym));
+      if (!nextSym) {
+        updatedSymbols.clear();
+        nextSym = visible[0];
+      }
+
+      if (nextSym) {
+        updatedSymbols.add(nextSym);
+        try {
+          const res = await fetchYahooFinancePrice(nextSym);
+          if (res && active) {
+            store.updatePrice(nextSym, res.price, res.d1);
+          }
+        } catch (err) {
+          console.warn(`Failed to fetch live price for ${nextSym}:`, err);
+        }
+      }
+
+      timeoutId = window.setTimeout(updateNext, 3000);
+    };
+
+    updateNext();
+
+    return () => {
+      active = false;
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [liveEnabled, store]);
 
   const showToast = useCallback((message: string, durationMs = 3200) => {
     setToastDuration(durationMs);
@@ -93,6 +168,8 @@ function DashboardContent() {
           loading={store.loading}
           generatedAt={store.generatedAt}
           badgeOk={dataReady}
+          liveEnabled={liveEnabled}
+          onToggleLive={() => setLiveEnabled((prev) => !prev)}
           onSnap={handleSnap}
           onShareX={handleShareX}
           onCopy={handleCopy}

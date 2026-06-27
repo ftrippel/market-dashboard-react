@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import type { MarketState } from '../types';
+import type { MarketState, MarketData } from '../types';
 
 interface MarketStore extends MarketState {
   loadAll: (data: Partial<MarketState>) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  updatePrice: (sym: string, price: number, d1: number) => void;
 }
 
 const initialState: MarketState = {
@@ -41,5 +42,27 @@ export const useMarketStore = create<MarketStore>((set) => ({
       ...data,
       loading: false,
       error: null,
+    }),
+
+  updatePrice: (sym, price, d1) =>
+    set((state) => {
+      const updateArray = <T extends MarketData>(arr: T[]): T[] =>
+        arr.map((item) => (item.sym === sym ? { ...item, price, d1 } : item));
+
+      return {
+        futures: updateArray(state.futures),
+        dxvix: updateArray(state.dxvix),
+        crypto: updateArray(state.crypto),
+        metals: updateArray(state.metals),
+        commodities: updateArray(state.commodities),
+        yields: updateArray(state.yields),
+        global: updateArray(state.global),
+        etfs: updateArray(state.etfs),
+        submkt: updateArray(state.submkt),
+        sectors: updateArray(state.sectors),
+        sectorsEW: updateArray(state.sectorsEW),
+        thematic: updateArray(state.thematic),
+        country: updateArray(state.country),
+      };
     }),
 }));
