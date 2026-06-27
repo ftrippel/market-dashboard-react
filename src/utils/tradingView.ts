@@ -38,7 +38,14 @@ export const TRADINGVIEW_ADVANCED_CHART_SCRIPT =
   'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
 
 export function toTradingViewSymbol(rawSym: string): string {
-  return TV_SYMBOL_MAP[rawSym] ?? rawSym;
+  const mapped = TV_SYMBOL_MAP[rawSym];
+  if (mapped) return mapped;
+
+  if (rawSym.includes('.')) {
+    return rawSym.split('.')[0];
+  }
+
+  return rawSym;
 }
 
 export interface AdvancedChartWidgetConfig {
