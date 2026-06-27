@@ -14,6 +14,21 @@ export function TradingViewModal() {
     setChartReady(false);
   }, [chart.tvSym, theme]);
 
+  useEffect(() => {
+    if (!chart.open) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeChart();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [chart.open, closeChart]);
+
   const handleChartReady = useCallback(() => {
     setChartReady(true);
   }, []);
