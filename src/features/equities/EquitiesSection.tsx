@@ -35,7 +35,7 @@ export function EquitiesSection() {
       </Card>
 
       <div className="g2" style={{ marginBottom: '9px' }}>
-        <Card label={<CardLabel>S&P 500 Sub-Sectors</CardLabel>}>
+        <Card label={<CardLabel>S&P 500 Sector ETFs</CardLabel>}>
           <MarketTable
             data={store.sectors}
             nameLabel="ETF"
@@ -47,7 +47,7 @@ export function EquitiesSection() {
             {...rankByW1}
           />
         </Card>
-        <Card label={<CardLabel>S&P 500 EW Sub-Sectors</CardLabel>}>
+        <Card label={<CardLabel>S&P 500 Sector ETFs (EW)</CardLabel>}>
           <MarketTable
             data={store.sectorsEW}
             nameLabel="ETF"
