@@ -10,7 +10,11 @@ import { PositionCalculator } from './features/calculator/PositionCalculator';
 import { useMarketStore } from './store/marketStore';
 import { useMarketData } from './hooks/useMarketData';
 import {
+  buildClipboardSnapshot,
+  buildShareTweetText,
+  copySnapshotText,
   downloadDashboardSnapshot,
+  shareDashboardToX,
 } from './services/share';
 import { config } from './config';
 import { colors } from './utils/formatting';
@@ -122,8 +126,6 @@ function DashboardContent() {
     }
   }, [flashSnap, showToast]);
 
-  // Commented out unused X sharing and layout copy handlers
-  /*
   const handleShareX = useCallback(async () => {
     const target = wrapRef.current;
     if (!target) return;
@@ -150,7 +152,6 @@ function DashboardContent() {
       showToast(`Copy failed: ${err instanceof Error ? err.message : 'Unknown error'}`, 5000);
     }
   }, [showToast, store]);
-  */
 
   const dataReady = !store.loading && store.futures.length > 0;
 
@@ -172,6 +173,8 @@ function DashboardContent() {
           liveEnabled={liveEnabled}
           onToggleLive={() => setLiveEnabled((prev) => !prev)}
           onSnap={handleSnap}
+          onShareX={handleShareX}
+          onCopy={handleCopy}
         />
 
         <div className="quote-bar">

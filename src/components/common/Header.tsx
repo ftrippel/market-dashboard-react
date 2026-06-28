@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors, formatDataTimestamp } from '../../utils/formatting';
 import { useTheme } from '../../context/ThemeContext';
-import { Icon } from './Icon';
+import { Icon, XIcon } from './Icon';
 
 interface HeaderProps {
   loading: boolean;
@@ -23,6 +23,8 @@ export const Header: React.FC<HeaderProps> = ({
   liveEnabled,
   onToggleLive,
   onSnap,
+  onShareX,
+  onCopy,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const [time, setTime] = React.useState<string>('—');
