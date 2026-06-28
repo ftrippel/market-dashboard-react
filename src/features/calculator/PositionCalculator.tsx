@@ -190,7 +190,7 @@ export function PositionCalculator() {
   // RISK-BASED · STAGGERED STOPS
 
   return (
-    <Section number="04" title="Position Sizing Calculator" subtitle="">
+    <Section number="04" title="Position Size Calculator" subtitle="">
       <div className="calc-wrap">
         <div className="cpanel">
           <div className="c-ttl">
