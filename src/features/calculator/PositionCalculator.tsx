@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { FormattedNumberInput, Icon, Section } from '../../components/common';
+import { FormattedNumberInput, Icon, Section, Toast } from '../../components/common';
 import { colors, formatUsCurrency, formatUsInteger } from '../../utils/formatting';
 
 type Direction = 'long' | 'short';
@@ -26,6 +26,30 @@ export function PositionCalculator() {
   const [riskPct, setRiskPct] = useState(0.3);
   const [entry, setEntry] = useState(100);
   const [stop, setStop] = useState(95);
+  const [notes, setNotes] = useState('');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleCopy = () => {
+    if (!calc) return;
+    const lines = [
+      `Notes: ${notes || '—'}`,
+      `Direction: ${direction.toUpperCase()}`,
+      `Shares: ${formatUsInteger(calc.shares)}`,
+      `Entry Price: ${formatUsCurrency(entry, 2)}`,
+      `Stop Loss: ${formatUsCurrency(stop, 2)}`,
+      `Max Risk: ${formatUsCurrency(Math.round(calc.rAmt))} (${riskPct.toFixed(2)}%)`,
+      `Position Value: ${formatUsCurrency(Math.round(calc.posVal))}`,
+      `R:R Targets:`,
+      ...calc.rrTargets.map((t) => `  ${t.r}x R: ${formatUsCurrency(t.tgt, 2)}`),
+    ];
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => {
+        setToastMessage('Trade details copied to clipboard!');
+      })
+      .catch((err) => {
+        console.error('Failed to copy trade details:', err);
+      });
+  };
 
   const calc = useMemo(() => {
     if (!equity || !riskPct || !entry || !stop) return null;
@@ -192,7 +216,13 @@ export function PositionCalculator() {
           </div>
           <div className="fg">
             <label className="fl">Notes</label>
-            <input className="fi" type="text" placeholder="e.g. AAPL"  />
+            <input
+              className="fi"
+              type="text"
+              placeholder="e.g. Breakout setup"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
           </div>
 
           {calc && (
@@ -224,6 +254,20 @@ export function PositionCalculator() {
                 </div>
               </div>
             </div>
+          )}
+          {calc && (
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="btn"
+              style={{
+                marginTop: '16px',
+                width: '100%',
+                justifyContent: 'center',
+              }}
+            >
+              <Icon name="content_copy" size="xs" /> Copy Trade Details
+            </button>
           )}
         </div>
 
@@ -371,6 +415,7 @@ export function PositionCalculator() {
           </div>
         </div>
       </div>
+      <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
     </Section>
   );
 }
