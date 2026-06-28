@@ -318,7 +318,7 @@ export function PositionCalculator() {
                   {formatUsCurrency(lv.price, 2)}
                 </span>
                 <span className="sr-shares" style={{ color: colors.text2, fontSize: '11px' }}>
-                  {lv.shares === 0 ? '—' : `${formatUsInteger(lv.shares)} sh`}
+                  {lv.shares === 0 ? '—' : formatUsInteger(lv.shares)}
                 </span>
                 <span className="sr-pct" style={{ color: colors.text2, fontSize: '11px' }}>
                   {lv.shares === 0 ? '—' : `${lv.pct}%`}
@@ -348,7 +348,7 @@ export function PositionCalculator() {
               <span className="sr-lbl">Total</span>
               <span className="sr-price" style={{ color: colors.text3 }}>—</span>
               <span className="sr-shares" style={{ color: colors.text2, fontSize: '11px' }}>
-                {calc.totalSharesRemoved === 0 ? '—' : `${formatUsInteger(calc.totalSharesRemoved)} sh`}
+                {calc.totalSharesRemoved === 0 ? '—' : formatUsInteger(calc.totalSharesRemoved)}
               </span>
               <span className="sr-pct" style={{ color: colors.text2, fontSize: '11px' }}>
                 {calc.totalSharesRemoved === 0 ? '—' : `${calc.totalPctRemoved}%`}
