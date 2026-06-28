@@ -777,11 +777,18 @@ body::before {
 }
 
 .sr-hdr,
-.sr {
+.sr,
+.sr-total {
   display: grid;
-  grid-template-columns: 100px 90px 1fr 1fr 1fr;
+  grid-template-columns: 95px 75px 1fr 1.2fr 1fr 1.1fr;
   gap: 6px;
   align-items: center;
+}
+
+.sr-total {
+  padding: 8px 0;
+  border-top: 1px dashed var(--border);
+  font-weight: 600;
 }
 
 .sr-hdr {
@@ -802,12 +809,7 @@ body::before {
   border-bottom: none;
 }
 
-.scale-viz {
-  position: relative;
-  height: 48px;
-  margin: 10px 0 4px;
-  border-top: 1px solid var(--border);
-}
+
 
 .viz-note {
   font-size: 10px;
