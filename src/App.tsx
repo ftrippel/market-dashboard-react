@@ -16,6 +16,7 @@ import {
   downloadDashboardSnapshot,
   shareDashboardToX,
 } from './services/share';
+import { config } from './config';
 import { colors } from './utils/formatting';
 import { Icon } from './components/common/Icon';
 import './App.css';
@@ -68,7 +69,7 @@ function DashboardContent() {
 
       const visible = getVisibleSymbols();
       if (visible.length === 0) {
-        timeoutId = window.setTimeout(updateNext, 2000);
+        timeoutId = window.setTimeout(updateNext, config.liveData.idleRetryIntervalMs);
         return;
       }
 
@@ -90,7 +91,7 @@ function DashboardContent() {
         }
       }
 
-      timeoutId = window.setTimeout(updateNext, 3000);
+      timeoutId = window.setTimeout(updateNext, config.liveData.refreshIntervalMs);
     };
 
     updateNext();
