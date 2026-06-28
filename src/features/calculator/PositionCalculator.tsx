@@ -308,8 +308,8 @@ export function PositionCalculator() {
               <span>Price</span>
               <span>Shares to Remove</span>
               <span>Shares to Remove %</span>
-              <span>P&L at Stop</span>
-              <span>P&L %</span>
+              <span>Loss $</span>
+              <span>Loss %</span>
             </div>
             {calc?.levels.map((lv) => (
               <div key={lv.lbl} className="sr">
@@ -326,20 +326,20 @@ export function PositionCalculator() {
                 <span
                   className="sr-pnl"
                   style={{
-                    color: lv.pnl < 0 ? colors.red : lv.pnl > 0 ? colors.green : colors.accent,
+                    color: lv.pnl === 0 ? colors.accent : colors.red,
                     fontSize: '11px',
                   }}
                 >
-                  {lv.pnl === 0 ? '—' : formatUsCurrency(Math.round(lv.pnl))}
+                  {lv.pnl === 0 ? '—' : formatUsCurrency(Math.abs(Math.round(lv.pnl)))}
                 </span>
                 <span
                   className="sr-pnl-pct"
                   style={{
-                    color: lv.pnl < 0 ? colors.red : lv.pnl > 0 ? colors.green : colors.accent,
+                    color: lv.pnl === 0 ? colors.accent : colors.red,
                     fontSize: '11px',
                   }}
                 >
-                  {lv.pnl === 0 ? '—' : `${((lv.pnl / equity) * 100).toFixed(2)}%`}
+                  {lv.pnl === 0 ? '—' : `${Math.abs((lv.pnl / equity) * 100).toFixed(2)}%`}
                 </span>
               </div>
             ))}
@@ -356,20 +356,20 @@ export function PositionCalculator() {
               <span
                 className="sr-pnl"
                 style={{
-                  color: calc.totalPnl < 0 ? colors.red : calc.totalPnl > 0 ? colors.green : colors.accent,
+                  color: calc.totalPnl === 0 ? colors.accent : colors.red,
                   fontSize: '11px',
                 }}
               >
-                {calc.totalPnl === 0 ? '—' : formatUsCurrency(Math.round(calc.totalPnl))}
+                {calc.totalPnl === 0 ? '—' : formatUsCurrency(Math.abs(Math.round(calc.totalPnl)))}
               </span>
               <span
                 className="sr-pnl-pct"
                 style={{
-                  color: calc.totalPnl < 0 ? colors.red : calc.totalPnl > 0 ? colors.green : colors.accent,
+                  color: calc.totalPnl === 0 ? colors.accent : colors.red,
                   fontSize: '11px',
                 }}
               >
-                {calc.totalPnl === 0 || !equity ? '—' : `${((calc.totalPnl / equity) * 100).toFixed(2)}%`}
+                {calc.totalPnl === 0 || !equity ? '—' : `${Math.abs((calc.totalPnl / equity) * 100).toFixed(2)}%`}
               </span>
             </div>
 
